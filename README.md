@@ -1,5 +1,5 @@
 # Patient-Registration-System
-This is a Python3 based project.
+This is a Python3-PyQt5 based project.
 
 The system comprised of various tabs/windows, starting with a login page ("Main.py") where the user has to fill valid credentials to it to unlock it. The credentials are stored in a database (sqlite3), named "Login_details.db". The code for the login-credentials creation is not available to the user, rather an one of registration file is sent to the user for the registration. Then, the master user and every user with valid login credentials can allow new employees to register through a new tab/window activated by a "Add User" button on main window.
 
