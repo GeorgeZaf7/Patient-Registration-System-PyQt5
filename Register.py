@@ -158,18 +158,16 @@ class Reg(QWidget):
         self.lbl_gend.setAlignment(QtCore.Qt.AlignCenter)
         grid_layout.addWidget(self.lbl_gend, 10, 0)
 
-        self.rd_btn = QRadioButton("Male")
-        self.rd_btn.setChecked(True)
-        self.rd_btn.gender = 'Male'
-        self.rd_btn.setIcon(QIcon('icons/man24.png'))
-        self.rd_btn.toggled.connect(self.onClicked)
-        grid_layout.addWidget(self.rd_btn, 10, 1, QtCore.Qt.AlignJustify)
+        self.rd_btn_male = QRadioButton("Male")
+        self.rd_btn_male.setChecked(True)
+        self.rd_btn_male.setIcon(QIcon('icons/man24.png'))
+        #self.rd_btn_male.toggled.connect(lambda: self.btnState(self.rd_btn_male))
+        grid_layout.addWidget(self.rd_btn_male, 10, 1, QtCore.Qt.AlignJustify)
 
-        self.rd_btn = QRadioButton("Female")
-        self.rd_btn.gender = 'Female'
-        self.rd_btn.setIcon(QIcon('icons/female24.png'))
-        self.rd_btn.toggled.connect(self.onClicked)
-        grid_layout.addWidget(self.rd_btn, 10, 2, QtCore.Qt.AlignJustify)
+        self.rd_btn_female = QRadioButton("Female")
+        self.rd_btn_female.setIcon(QIcon('icons/female24.png'))
+        #self.rd_btn_female.toggled.connect(lambda: self.btnState(self.rd_btn_female))
+        grid_layout.addWidget(self.rd_btn_female, 10, 2, QtCore.Qt.AlignJustify)
 
         self.empty = QLabel('')
         self.empty.setFixedHeight(30)
@@ -183,13 +181,13 @@ class Reg(QWidget):
         self.btn_Register.clicked.connect(self.btn_Reg_clicked)
         grid_layout.addWidget(self.btn_Register, 12, 1, 1, 2, QtCore.Qt.AlignJustify)
 
-        self.btn_Back = QPushButton('Back')
-        self.btn_Back.setToolTip('Clear Sections')
-        self.btn_Back.setFont(QFont('Arial', 14, QFont.Bold))
-        self.btn_Back.setFixedWidth(300)
-        self.btn_Back.setFixedHeight(40)
-        self.btn_Back.clicked.connect(self.close)
-        grid_layout.addWidget(self.btn_Back, 13, 1, 1, 2, QtCore.Qt.AlignJustify)
+        self.btn_Exit = QPushButton('Exit')
+        self.btn_Exit.setToolTip('Clear Sections')
+        self.btn_Exit.setFont(QFont('Arial', 14, QFont.Bold))
+        self.btn_Exit.setFixedWidth(300)
+        self.btn_Exit.setFixedHeight(40)
+        self.btn_Exit.clicked.connect(self.close)
+        grid_layout.addWidget(self.btn_Exit, 13, 1, 1, 2, QtCore.Qt.AlignJustify)
 
         # ===============================
         self.empty = QLabel('')
@@ -207,13 +205,63 @@ class Reg(QWidget):
 
         # Functions for buttons
 
-    def onClicked(self):
-        self.rd_btn = self.sender()
-        if self.rd_btn.isChecked():
-            print("Gender is %s" % (self.rd_btn.gender))
-
     def btn_Reg_clicked(self):
-        return
+        if self.rd_btn_male.isChecked() == True:
+            gender = self.rd_btn_male.text()
+        elif  self.rd_btn_female.isChecked() == True:
+            gender = self.rd_btn_female.text()
+        conn = sqlite3.connect('Patient_DB.db')
+        cur = conn.cursor()
+        # Create a table
+        cur.execute("""CREATE TABLE IF NOT EXISTS addresses (
+                    first_name text,
+                    last_name text,
+                    address text,
+                    postcode text,
+                    city text,
+                    mobile integer,
+                    email txt,
+                    DoB text,
+                    gender text
+            )""")
+        b = self.dateedit.date()
+        var = b.toPyDate()
+        cur.execute("INSERT INTO addresses VALUES (:f_name, :l_name, :addr, :post, :city, :mob, :email, :dob, :gnd)",
+                    {
+                        'f_name': self.txt_name.text(),
+                        'l_name': self.txt_sname.text(),
+                        'addr': self.txt_addr.text(),
+                        'post': self.txt_post.text(),
+                        'city': self.txt_city.text(),
+                        'mob': self.txt_mob.text(),
+                        'email': self.txt_email.text(),
+                        'dob': var,
+                        'gnd': gender
+                    })
+        # Commit Changes
+        conn.commit()
+        # Close connection
+        conn.close()
+        # Clear Entries
+        self.txt_name.clear()
+        self.txt_sname.clear()
+        self.txt_addr.clear()
+        self.txt_post.clear()
+        self.txt_city.clear()
+        self.txt_mob.clear()
+        self.txt_email.clear()
+        # PRINT THE DATABASE TO CHECK IT
+        conn = sqlite3.connect('Patient_DB.db')
+        cur = conn.cursor()
+        # Print the database
+        cur.execute("SELECT *, oid FROM addresses")
+        var = cur.fetchall()
+        print(var)
+        # Commit Changes
+        conn.commit()
+        # Close connection
+        conn.close()
+
 
 
 if __name__ == '__main__':
