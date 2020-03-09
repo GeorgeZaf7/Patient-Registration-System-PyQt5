@@ -31,7 +31,7 @@ class Search(QWidget):
         # QMessageBox.about(self, 'AristonAQ Ltd', "\n   Welcome to AristonREG!\nA Patient Registering System")
 
         p = QPalette()
-        gradient = QLinearGradient(0, 0, 0, 300)
+        gradient = QLinearGradient(0, 200, 0, 400)
         gradient.setColorAt(1.0, QColor(204, 240, 255))  # 204, 240, 240
         gradient.setColorAt(0.0, QColor(240, 160, 160))
         p.setBrush(QPalette.Window, QBrush(gradient))

@@ -36,7 +36,7 @@ class Main(QWidget):
         QMessageBox.about(self, 'AristonAQ Ltd', "\n   Welcome to AristonREG!\nA Patient Registering System")
 
         p = QPalette()
-        gradient = QLinearGradient(0, 0, 0, 300)
+        gradient = QLinearGradient(0, 50, 0, 300)
         gradient.setColorAt(1.0, QColor(204, 240, 255))  # 204, 240, 240
         gradient.setColorAt(0.0, QColor(240, 160, 160))
         p.setBrush(QPalette.Window, QBrush(gradient))
@@ -167,9 +167,9 @@ class Main(QWidget):
         conn.close()
 
     def btn_addusr_clicked(self):
-        conn = sqlite3.connect('Login_Details.db')
+        conn = sqlite3.connect('Login_Details_Database.db')
         c = conn.cursor()
-        c.execute('''CREATE TABLE IF NOT EXISTS users (username, password)''')
+        c.execute('''CREATE TABLE IF NOT EXISTS users (name, surname, username, password)''')
         user = self.txt_User.text()
         pas = self.txt_Pass.text()
         c.execute('''SELECT username, password FROM users WHERE username=? AND password=?''', (user, pas,))

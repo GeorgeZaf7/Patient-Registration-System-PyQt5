@@ -25,7 +25,7 @@ class AddUsr(QWidget):
         self.setWindowIcon(QIcon('Resized_logo.png'))
 
         p = QPalette()
-        gradient = QLinearGradient(0, 0, 0, 300)
+        gradient = QLinearGradient(0, 200, 0, 400)
         gradient.setColorAt(1.0, QColor(204, 240, 255))  # 204, 240, 240
         gradient.setColorAt(0.0, QColor(240, 160, 160))
         p.setBrush(QPalette.Window, QBrush(gradient))
@@ -150,10 +150,34 @@ class AddUsr(QWidget):
         self.txt_Sname.setText("")
 
     def btn_submit_clicked(self):
-        return
+        conn = sqlite3.connect('Login_Details_Database.db')
+        c = conn.cursor()
+        c.execute('''CREATE TABLE IF NOT EXISTS users (name, surname, username, password)''')
+        self.a1 = self.txt_Name.text()
+        self.a2 = self.txt_Sname.text()
+        self.a3 = self.txt_User.text()
+        self.a4 = self.txt_Pass.text()
+        self.add = [self.a1, self.a2, self.a3, self.a4]
+        c.execute('''SELECT username FROM users WHERE username=?''', (self.txt_User.text(),))
+        exists = c.fetchall()
+        if not exists:
+            c.execute('INSERT INTO users VALUES(?,?,?,?)', self.add)
+            QMessageBox.information(self,'Successful', 'All Done!')
+            self.txt_User.setText("")
+            self.txt_Pass.setText("")
+            self.txt_Name.setText("")
+            self.txt_Sname.setText("")
+            print(self.add)
+        else:
+            QMessageBox.warning(self, "Error", "Username already in use. Try again.")
+            self.txt_User.setText("")
+            self.txt_Pass.setText("")
+            self.txt_Name.setText("")
+            self.txt_Sname.setText("")
+        conn.commit()
 
-'''if __name__ == '__main__':
+if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = AddUsr()
     ex.show()
-    sys.exit(app.exec())'''
+    sys.exit(app.exec())

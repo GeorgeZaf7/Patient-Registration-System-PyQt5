@@ -31,7 +31,7 @@ class Reg(QWidget):
         # QMessageBox.about(self, 'AristonAQ Ltd', "\n   Welcome to AristonREG!\nA Patient Registering System")
 
         p = QPalette()
-        gradient = QLinearGradient(0, 0, 0, 400)
+        gradient = QLinearGradient(0, 200, 0, 400)
         gradient.setColorAt(1.0, QColor(204, 240, 255))  # 204, 240, 240
         gradient.setColorAt(0.0, QColor(255, 160, 160))
         p.setBrush(QPalette.Window, QBrush(gradient))
@@ -161,12 +161,12 @@ class Reg(QWidget):
         self.rd_btn_male = QRadioButton("Male")
         self.rd_btn_male.setChecked(True)
         self.rd_btn_male.setIcon(QIcon('icons/man24.png'))
-        #self.rd_btn_male.toggled.connect(lambda: self.btnState(self.rd_btn_male))
+        # self.rd_btn_male.toggled.connect(lambda: self.btnState(self.rd_btn_male))
         grid_layout.addWidget(self.rd_btn_male, 10, 1, QtCore.Qt.AlignJustify)
 
         self.rd_btn_female = QRadioButton("Female")
         self.rd_btn_female.setIcon(QIcon('icons/female24.png'))
-        #self.rd_btn_female.toggled.connect(lambda: self.btnState(self.rd_btn_female))
+        # self.rd_btn_female.toggled.connect(lambda: self.btnState(self.rd_btn_female))
         grid_layout.addWidget(self.rd_btn_female, 10, 2, QtCore.Qt.AlignJustify)
 
         self.empty = QLabel('')
@@ -208,7 +208,7 @@ class Reg(QWidget):
     def btn_Reg_clicked(self):
         if self.rd_btn_male.isChecked() == True:
             gender = self.rd_btn_male.text()
-        elif  self.rd_btn_female.isChecked() == True:
+        elif self.rd_btn_female.isChecked() == True:
             gender = self.rd_btn_female.text()
         conn = sqlite3.connect('Patient_DB.db')
         cur = conn.cursor()
@@ -250,6 +250,7 @@ class Reg(QWidget):
         self.txt_city.clear()
         self.txt_mob.clear()
         self.txt_email.clear()
+        QMessageBox.information(self, 'Successful', 'All Done!')
         # PRINT THE DATABASE TO CHECK IT
         conn = sqlite3.connect('Patient_DB.db')
         cur = conn.cursor()
@@ -261,7 +262,6 @@ class Reg(QWidget):
         conn.commit()
         # Close connection
         conn.close()
-
 
 
 if __name__ == '__main__':
