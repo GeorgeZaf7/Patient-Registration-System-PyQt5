@@ -144,7 +144,7 @@ class Main(QWidget):
         self.txt_Pass.clear()#setText("")
 
     def btn_submit_clicked(self):
-        conn = sqlite3.connect('Login_Details.db')
+        conn = sqlite3.connect('Login_Details_Database.db')
         c = conn.cursor()
         c.execute('''CREATE TABLE IF NOT EXISTS users (username, password)''')
         user = self.txt_User.text()
