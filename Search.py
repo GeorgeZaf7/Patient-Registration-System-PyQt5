@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+# ----------------------------------------------------------------------------
+# File Name:    Search.py
+# Project Name: Patient Registration System
+# Author:       Georgios Zafeiropoulos
+# Created:      21/02/2020
+# Modified:     10/03/2020
+# Copyright:    (c) Georgios Zafeiropoulos, 2020
+# License:      CC-BY
+# ----------------------------------------------------------------------------
 import sys
 import sqlite3
 import os
@@ -7,7 +17,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QAc
 from PyQt5.QtGui import QIcon, QFont, QPalette, QLinearGradient, QColor, QBrush
 from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtCore import Qt
-import Register
+import Register, Search_Reults
 
 
 class Search(QWidget):
@@ -31,9 +41,9 @@ class Search(QWidget):
         # QMessageBox.about(self, 'AristonAQ Ltd', "\n   Welcome to AristonREG!\nA Patient Registering System")
 
         p = QPalette()
-        gradient = QLinearGradient(0, 200, 0, 400)
-        gradient.setColorAt(1.0, QColor(204, 240, 255))  # 204, 240, 240
-        gradient.setColorAt(0.0, QColor(240, 160, 160))
+        gradient = QLinearGradient(0, 50, 0, 300)
+        gradient.setColorAt(1.0, QColor(204, 240, 240))  # 204, 240, 240
+        gradient.setColorAt(0.0, QColor(233, 112, 112))
         p.setBrush(QPalette.Window, QBrush(gradient))
         self.setPalette(p)  #
 
@@ -107,6 +117,7 @@ class Search(QWidget):
         self.btn_Search = QPushButton('Search')
         self.btn_Search.setToolTip('Login')
         self.btn_Search.setFont(QFont('Arial', 14, QFont.Bold))
+        self.btn_Search.setStyleSheet('QPushButton {background-color: #FF0000; color: white;}')
         self.btn_Search.setFixedWidth(300)
         self.btn_Search.setFixedHeight(40)
         self.btn_Search.clicked.connect(self.btn_search_clicked)
@@ -114,6 +125,7 @@ class Search(QWidget):
 
         self.btn_Reg = QPushButton('Register')
         self.btn_Reg.setToolTip('Clear Sections')
+        self.btn_Reg.setStyleSheet('QPushButton {color: #FF0000;}')
         self.btn_Reg.setFont(QFont('Arial', 14, QFont.Bold))
         self.btn_Reg.setFixedWidth(300)
         self.btn_Reg.setFixedHeight(40)
@@ -153,7 +165,35 @@ class Search(QWidget):
         # Functions for buttons
 
     def btn_search_clicked(self):
-        return
+        conn = sqlite3.connect('Patient_DB.db')
+        cur = conn.cursor()
+        a = self.txt_name.text()
+        b = self.txt_sname.text()
+        c = self.txt_post.text()
+        d = self.txt_mob.text()
+        cur.execute('''SELECT first_name, last_name, postcode, mobile FROM addresses WHERE first_name=? AND last_name=? AND postcode=? AND mobile=? ''', (a, b, c, d,))
+        exists = cur.fetchall()
+        #print(exists)
+        if not exists:
+            QMessageBox.warning(self, "Error", "Patient Does Not Exist.")
+            self.txt_name.clear()
+            self.txt_sname.clear()
+            self.txt_post.clear()
+            self.txt_mob.clear()
+            return
+        else:
+            #QMessageBox.information(self, "Successful", 'Patient Exists')
+            cur.execute('SELECT * FROM addresses WHERE postcode=? AND mobile=?', (c, d,))
+            pat = cur.fetchone()
+            self.new = Search_Reults.Search_Res(pat)
+            self.new.show()
+            self.txt_name.clear()
+            self.txt_sname.clear()
+            self.txt_post.clear()
+            self.txt_mob.clear()
+        conn.commit()
+        # Close connection
+        conn.close()
 
     def btn_Reg_clicked(self):
         self.txt_name.setText("")

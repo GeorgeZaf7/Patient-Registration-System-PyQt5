@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+# ----------------------------------------------------------------------------
+# File Name:    Add_User.py
+# Project Name: Patient Registration System
+# Author:       Georgios Zafeiropoulos
+# Created:      23/02/2020
+# Modified:     10/03/2020
+# Copyright:    (c) Georgios Zafeiropoulos, 2020
+# License:      CC-BY
+# ----------------------------------------------------------------------------
 import sys
 import sqlite3
 import os
@@ -25,9 +35,9 @@ class AddUsr(QWidget):
         self.setWindowIcon(QIcon('Resized_logo.png'))
 
         p = QPalette()
-        gradient = QLinearGradient(0, 200, 0, 400)
+        gradient = QLinearGradient(0, 100, 0, 300)
         gradient.setColorAt(1.0, QColor(204, 240, 255))  # 204, 240, 240
-        gradient.setColorAt(0.0, QColor(240, 160, 160))
+        gradient.setColorAt(0.0, QColor(240, 112, 112))
         p.setBrush(QPalette.Window, QBrush(gradient))
         self.setPalette(p)
 
@@ -105,21 +115,22 @@ class AddUsr(QWidget):
         self.empty.setFixedHeight(20)
         grid_layout.addWidget(self.empty, 7, 0, 1, 3)
 
-        self.btn_Submit = QPushButton('Submit')
-        self.btn_Submit.setToolTip('Login')
-        self.btn_Submit.setFont(QFont('Arial', 14, QFont.Bold))
-        self.btn_Submit.setFixedWidth(150)
-        self.btn_Submit.setFixedHeight(40)
-        self. btn_Submit.clicked.connect(self.btn_submit_clicked)
-        grid_layout.addWidget(self.btn_Submit, 8, 0)
-
         self.btn_Clear = QPushButton('Clear')
         self.btn_Clear.setToolTip('Clear Sections')
         self.btn_Clear.setFont(QFont('Arial', 14, QFont.Bold))
         self.btn_Clear.setFixedWidth(150)
         self.btn_Clear.setFixedHeight(40)
         self.btn_Clear.clicked.connect(self.btn_clr_clicked)
-        grid_layout.addWidget(self.btn_Clear, 8, 1)
+        grid_layout.addWidget(self.btn_Clear, 8, 0)
+
+        self.btn_Submit = QPushButton('Submit')
+        self.btn_Submit.setToolTip('Login')
+        self.btn_Submit.setFont(QFont('Arial', 14, QFont.Bold))
+        self.btn_Submit.setStyleSheet('QPushButton {background-color: #FF0000; color: white;}')
+        self.btn_Submit.setFixedWidth(150)
+        self.btn_Submit.setFixedHeight(40)
+        self. btn_Submit.clicked.connect(self.btn_submit_clicked)
+        grid_layout.addWidget(self.btn_Submit, 8, 1)
 
         self.btn_Back = QPushButton('Back')
         self.btn_Back.setToolTip('Close Application')

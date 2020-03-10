@@ -1,15 +1,22 @@
+# -*- coding: utf-8 -*-
+# ----------------------------------------------------------------------------
+# File Name:    Main.py
+# Project Name: Patient Registration System
+# Author:       Georgios Zafeiropoulos
+# Created:      20/02/2020
+# Modified:     10/03/2020
+# Copyright:    (c) Georgios Zafeiropoulos, 2020
+# License:      CC-BY
+# ----------------------------------------------------------------------------
 import sys
 import sqlite3
-import os
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QAction, qApp, QTextEdit, QMessageBox, \
     QFontDialog, QStatusBar, QFileDialog, QLabel, QVBoxLayout, QFrame, QSizePolicy, QDesktopWidget, QHBoxLayout, \
     QGridLayout, QLineEdit
 from PyQt5.QtGui import QIcon, QFont, QPalette, QLinearGradient, QColor, QBrush
 from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtCore import Qt
-
 import Add_User
-import Register
 import Search
 
 
@@ -38,7 +45,7 @@ class Main(QWidget):
         p = QPalette()
         gradient = QLinearGradient(0, 50, 0, 300)
         gradient.setColorAt(1.0, QColor(204, 240, 255))  # 204, 240, 240
-        gradient.setColorAt(0.0, QColor(240, 160, 160))
+        gradient.setColorAt(0.0, QColor(240,112, 112)) #240, 160, 160
         p.setBrush(QPalette.Window, QBrush(gradient))
         self.setPalette(p)  #
 
@@ -90,6 +97,7 @@ class Main(QWidget):
 
         self.btn_Submit = QPushButton('Submit')
         self.btn_Submit.setToolTip('Login')
+        self.btn_Submit.setStyleSheet('QPushButton {background-color: #FF0000; color: white;}')
         self.btn_Submit.setFont(QFont('Arial', 14, QFont.Bold))
         self.btn_Submit.setFixedWidth(150)
         self.btn_Submit.setFixedHeight(40)
@@ -114,6 +122,7 @@ class Main(QWidget):
 
         self.btn_AddUser = QPushButton('Add User')
         self.btn_AddUser.setToolTip('Add New User')
+        self.btn_AddUser.setStyleSheet('QPushButton {color: #FF0000;}')
         self.btn_AddUser.setFont(QFont('Arial', 14, QFont.Bold))
         self.btn_AddUser.setFixedWidth(150)
         self.btn_AddUser.setFixedHeight(40)
@@ -186,8 +195,9 @@ class Main(QWidget):
             self.dialogs = Add_User.AddUsr()
             #self.dialogs.append(self.dialogs)
             self.dialogs.show()
-
-        #Register.Reg()
+        conn.commit()
+        # Close connection
+        conn.close()
 
 
 if __name__ == '__main__':

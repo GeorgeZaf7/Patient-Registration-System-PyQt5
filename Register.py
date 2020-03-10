@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+# ----------------------------------------------------------------------------
+# File Name:    Register.py
+# Project Name: Patient Registration System
+# Author:       Georgios Zafeiropoulos
+# Created:      22/02/2020
+# Modified:     10/03/2020
+# Copyright:    (c) Georgios Zafeiropoulos, 2020
+# License:      CC-BY
+# ----------------------------------------------------------------------------
 import sys
 import sqlite3
 import os
@@ -33,7 +43,7 @@ class Reg(QWidget):
         p = QPalette()
         gradient = QLinearGradient(0, 200, 0, 400)
         gradient.setColorAt(1.0, QColor(204, 240, 255))  # 204, 240, 240
-        gradient.setColorAt(0.0, QColor(255, 160, 160))
+        gradient.setColorAt(0.0, QColor(233, 112, 112))
         p.setBrush(QPalette.Window, QBrush(gradient))
         self.setPalette(p)  #
 
@@ -176,6 +186,7 @@ class Reg(QWidget):
         self.btn_Register = QPushButton('Register')
         self.btn_Register.setToolTip('Register')
         self.btn_Register.setFont(QFont('Arial', 14, QFont.Bold))
+        self.btn_Register.setStyleSheet('QPushButton {background-color: #FF0000; color: white;}')
         self.btn_Register.setFixedWidth(300)
         self.btn_Register.setFixedHeight(40)
         self.btn_Register.clicked.connect(self.btn_Reg_clicked)
@@ -207,9 +218,12 @@ class Reg(QWidget):
 
     def btn_Reg_clicked(self):
         if self.rd_btn_male.isChecked() == True:
-            gender = self.rd_btn_male.text()
+            gen = self.rd_btn_male.text()
         elif self.rd_btn_female.isChecked() == True:
-            gender = self.rd_btn_female.text()
+            gen = self.rd_btn_female.text()
+        b = self.dateedit.date()
+        var = b.toPyDate()
+
         conn = sqlite3.connect('Patient_DB.db')
         cur = conn.cursor()
         # Create a table
@@ -219,14 +233,19 @@ class Reg(QWidget):
                     address text,
                     postcode text,
                     city text,
-                    mobile integer,
+                    mobile text,
                     email txt,
                     DoB text,
-                    gender text
+                    gender text,
+                    patid text
             )""")
-        b = self.dateedit.date()
-        var = b.toPyDate()
-        cur.execute("INSERT INTO addresses VALUES (:f_name, :l_name, :addr, :post, :city, :mob, :email, :dob, :gnd)",
+        cur.execute('SELECT * FROM addresses')
+        length_DB = cur.fetchall()
+        if len(length_DB) == 0:
+            pid = 1
+        else:
+            pid = str(len(length_DB) + 1)
+        cur.execute("INSERT INTO addresses VALUES (:f_name, :l_name, :addr, :post, :city, :mob, :email, :dob, :gnd, :pat_id)",
                     {
                         'f_name': self.txt_name.text(),
                         'l_name': self.txt_sname.text(),
@@ -236,13 +255,9 @@ class Reg(QWidget):
                         'mob': self.txt_mob.text(),
                         'email': self.txt_email.text(),
                         'dob': var,
-                        'gnd': gender
+                        'gnd': gen,
+                        'pat_id': pid
                     })
-        # Commit Changes
-        conn.commit()
-        # Close connection
-        conn.close()
-        # Clear Entries
         self.txt_name.clear()
         self.txt_sname.clear()
         self.txt_addr.clear()
@@ -251,13 +266,10 @@ class Reg(QWidget):
         self.txt_mob.clear()
         self.txt_email.clear()
         QMessageBox.information(self, 'Successful', 'All Done!')
-        # PRINT THE DATABASE TO CHECK IT
-        conn = sqlite3.connect('Patient_DB.db')
-        cur = conn.cursor()
-        # Print the database
+        '''# Print the database
         cur.execute("SELECT *, oid FROM addresses")
         var = cur.fetchall()
-        print(var)
+        print(var)'''
         # Commit Changes
         conn.commit()
         # Close connection
