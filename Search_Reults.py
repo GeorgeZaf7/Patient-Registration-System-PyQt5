@@ -59,16 +59,16 @@ class Search_Res(QWidget):
         grid_layout.addWidget(self.lbl_pag_title, 0, 0, 1, 2)
 
         self.patient = a
-        print_Data = 'Patient ID: ' + str(self.patient[9]) + '\nName: ' + str(self.patient[0]) + "\nSurname: " + str(self.patient[1]) + "\nAddress: " + str(
-            self.patient[2]) + "\nPostcode: " + str(self.patient[3]) + "\nCity: " + str(self.patient[4]) + \
-                     "\nMobile: " + str(self.patient[5]) + "\nEmail: " + str(self.patient[6]) + "\nDate of Birth: " + str(
-            self.patient[7]) + "\nGender: " + str(self.patient[8] + '\n')
+        print_Data = 'Patient ID: ' + str(self.patient[0]) + '\nName: ' + str(self.patient[1]) + "\nSurname: " + str(self.patient[2]) + "\nAddress: " + str(
+            self.patient[3]) + "\nPostcode: " + str(self.patient[4]) + "\nCity: " + str(self.patient[5]) + \
+                     "\nMobile: " + str(self.patient[6]) + "\nEmail: " + str(self.patient[7]) + "\nDate of Birth: " + str(
+            self.patient[8]) + "\nGender: " + str(self.patient[9] + '\n')
         self.txt_pat_info = QTextEdit(self)
         self.txt_pat_info.setReadOnly(True)
         self.txt_pat_info.setFont(QFont('Arial', 12, QFont.Bold))
         self.txt_pat_info.setText(str(print_Data))
         grid_layout.addWidget(self.txt_pat_info, 1, 0, 1, 2, Qt.AlignJustify)
-        self.txt_pat_info.resize(100, 100)
+        #self.txt_pat_info.resize(100, 100)
 
         self.btn_Clr = QPushButton('Print')
         self.btn_Clr.setToolTip('Print')

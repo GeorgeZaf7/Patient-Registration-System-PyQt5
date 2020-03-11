@@ -171,7 +171,7 @@ class Search(QWidget):
         b = self.txt_sname.text()
         c = self.txt_post.text()
         d = self.txt_mob.text()
-        cur.execute('''SELECT first_name, last_name, postcode, mobile FROM addresses WHERE first_name=? AND last_name=? AND postcode=? AND mobile=? ''', (a, b, c, d,))
+        cur.execute('''SELECT first_name, last_name, postcode, mobile FROM patients WHERE first_name=? AND last_name=? AND postcode=? AND mobile=? ''', (a, b, c, d,))
         exists = cur.fetchall()
         #print(exists)
         if not exists:
@@ -183,7 +183,7 @@ class Search(QWidget):
             return
         else:
             #QMessageBox.information(self, "Successful", 'Patient Exists')
-            cur.execute('SELECT * FROM addresses WHERE postcode=? AND mobile=?', (c, d,))
+            cur.execute('SELECT * FROM patients WHERE postcode=? AND mobile=?', (c, d,))
             pat = cur.fetchone()
             self.new = Search_Reults.Search_Res(pat)
             self.new.show()

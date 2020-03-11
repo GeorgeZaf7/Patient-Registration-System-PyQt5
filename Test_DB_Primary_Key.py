@@ -1,26 +1,16 @@
-# -*- coding: utf-8 -*-
-# ----------------------------------------------------------------------------
-# File Name:    Register.py
-# Project Name: Patient Registration System
-# Author:       Georgios Zafeiropoulos
-# Created:      22/02/2020
-# Modified:     10/03/2020
-# Copyright:    (c) Georgios Zafeiropoulos, 2020
-# License:      CC-BY
-# ----------------------------------------------------------------------------
 import sys
 import sqlite3
 import os
 from datetime import datetime
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QAction, qApp, QTextEdit, QMessageBox, \
     QFontDialog, QStatusBar, QFileDialog, QLabel, QVBoxLayout, QFrame, QSizePolicy, QDesktopWidget, QHBoxLayout, \
-    QGridLayout, QLineEdit, QComboBox, QSpinBox, QDateEdit, QRadioButton, QCalendarWidget
+    QGridLayout, QLineEdit, QComboBox, QSpinBox, QDateEdit, QRadioButton
 from PyQt5.QtGui import QIcon, QFont, QPalette, QLinearGradient, QColor, QBrush
 from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtCore import Qt, QDate
 
 
-class Reg(QWidget):
+class Test_DB(QWidget):
     def __init__(self):
         super().__init__()
         self.title = "Patient Registration System"
@@ -28,12 +18,6 @@ class Reg(QWidget):
         self.top = 0
         self.width = 640
         self.height = 480
-
-        global currentYear, currentMonth, currentDay
-        currentDay = datetime.now().day
-        currentMonth = datetime.now().month
-        currentYear = datetime.now().year
-
         self.initUI()
 
     def initUI(self):
@@ -157,22 +141,14 @@ class Reg(QWidget):
         # lbl_pass.setFixedWidth(100)
         grid_layout.addWidget(self.lbl_dob, 9, 0)
 
-        self.calendar = QCalendarWidget(self)
-        self.calendar.setGridVisible(True)
-        self.calendar.setMinimumDate(QDate(currentYear - 90, currentMonth, 1))
-        self.calendar.setMaximumDate(QDate(currentYear, currentMonth, currentDay))
-        self.calendar.clicked[QDate].connect(self.showDate)
-        grid_layout.addWidget(self.calendar, 9, 1, 1, 2)
-
-
-        '''self.dateedit = QDateEdit(self)
+        self.dateedit = QDateEdit(self)
         self.dateedit.setDate(QDate.currentDate())
         self.dateedit.setMinimumDate(QDate(1900, 1, 1))
         self.dateedit.setMaximumDate(QDate(2100, 12, 31))
         self.dateedit.setFixedHeight(30)
         grid_layout.addWidget(self.dateedit, 9, 1, 1, 2)
 
-        # Read date
+        '''# Read date
         b = self.dateedit.date()
         var = b.toPyDate()
         print(var)'''
@@ -230,10 +206,7 @@ class Reg(QWidget):
 
         # Functions for buttons
 
-    def showDate(self, date):
-        global new
-        new = date.toString('dd-MM-yyyy')
-        print(new)
+
 
 
     def btn_Reg_clicked(self):
@@ -241,30 +214,29 @@ class Reg(QWidget):
             gen = self.rd_btn_male.text()
         elif self.rd_btn_female.isChecked() == True:
             gen = self.rd_btn_female.text()
-        '''b = self.dateedit.date()
-        var = b.toPyDate()'''
+        b = self.dateedit.date()
+        var = b.toPyDate()
 
-        conn = sqlite3.connect('Patient_DB.db')
+        conn = sqlite3.connect('Alpha.db')
         cur = conn.cursor()
         cur.execute("""CREATE TABLE IF NOT EXISTS patients (
-                                    pat_id integer PRIMARY KEY NOT NULL,
-                                    first_name text NOT NULL,
-                                    last_name text NOT NULL,
-                                    address text NOT NULL,
-                                    postcode text NOT NULL,
-                                    city text NOT NULL,
-                                    mobile text NOT NULL,
-                                    email txt NOT NULL,
-                                    DoB text NOT NULL,
-                                    gender text NOT NULL
-                            )""")
+                            pat_id integer PRIMARY KEY NOT NULL,
+                            first_name text NOT NULL,
+                            last_name text NOT NULL,
+                            address text NOT NULL,
+                            postcode text NOT NULL,
+                            city text NOT NULL,
+                            mobile text NOT NULL,
+                            email txt NOT NULL,
+                            DoB text NOT NULL,
+                            gender text NOT NULL
+                    )""")
 
         patient_id = """INSERT INTO patients (first_name, last_name, address, postcode, city, mobile, email, DoB, 
-                gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) """
+        gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) """
 
-        cur.execute(patient_id,
-                    (self.txt_name.text(), self.txt_sname.text(), self.txt_addr.text(), self.txt_post.text(),
-                     self.txt_city.text(), self.txt_mob.text(), self.txt_email.text(), new, gen))
+        cur.execute(patient_id, (self.txt_name.text(), self.txt_sname.text(), self.txt_addr.text(), self.txt_post.text(),
+                                 self.txt_city.text(), self.txt_mob.text(), self.txt_email.text(), var, gen))
         self.txt_name.clear()
         self.txt_sname.clear()
         self.txt_addr.clear()
@@ -279,10 +251,10 @@ class Reg(QWidget):
         conn.commit()
         conn.close()
 
-
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     app.setWindowIcon(QIcon('Resize_Logo.png'))
-    ex = Reg()
+    ex = Test_DB()
     ex.show()
     sys.exit(app.exec())
+

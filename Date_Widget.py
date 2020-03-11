@@ -23,8 +23,12 @@ class CalendarDemo(QWidget):
         self.calendar.setGridVisible(False)
         self.calendar.setMinimumDate(QDate(currentYear - 90, currentMonth, 1))
         self.calendar.setMaximumDate(QDate(currentYear, currentMonth, currentDay))
-        self.calendar.clicked.connect(self.dateval)
-        print(alpha)
+        self.calendar.clicked[QDate].connect(self.showDate)
+
+    def showDate(self, date):
+        new = date.toString('dd-MM-yyyy')
+        print(new)
+
 def main():
     app = QApplication(sys.argv)
     demo = CalendarDemo()

@@ -6,7 +6,7 @@ conn = sqlite3.connect('Patient_DB.db')
 
 cur = conn.cursor()
 
-cur.execute("SELECT * FROM addresses")
+cur.execute("SELECT * FROM patients")
 #cur.execute("SELECT * FROM users")
 #cur.execute("SELECT * FROM records")
 
