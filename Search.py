@@ -141,7 +141,7 @@ class Search(QWidget):
         grid_layout.addWidget(self.btn_Clr, 8, 1, Qt.AlignCenter)
 
         self.btn_Back = QPushButton('Back')
-        self.btn_Back.setToolTip('Clear Sections')
+        self.btn_Back.setToolTip('Go to previous window')
         self.btn_Back.setFont(QFont('Arial', 14, QFont.Bold))
         self.btn_Back.setFixedWidth(300)
         self.btn_Back.setFixedHeight(40)
@@ -165,35 +165,38 @@ class Search(QWidget):
         # Functions for buttons
 
     def btn_search_clicked(self):
-        conn = sqlite3.connect('Patient_DB.db')
-        cur = conn.cursor()
-        a = self.txt_name.text()
-        b = self.txt_sname.text()
-        c = self.txt_post.text()
-        d = self.txt_mob.text()
-        cur.execute('''SELECT first_name, last_name, postcode, mobile FROM patients WHERE first_name=? AND last_name=? AND postcode=? AND mobile=? ''', (a, b, c, d,))
-        exists = cur.fetchall()
-        #print(exists)
-        if not exists:
-            QMessageBox.warning(self, "Error", "Patient Does Not Exist.")
-            self.txt_name.clear()
-            self.txt_sname.clear()
-            self.txt_post.clear()
-            self.txt_mob.clear()
-            return
+        if self.txt_name.text() =="" or self.txt_sname.text() == "" or self.txt_post.text() =="" or self.txt_mob.text() == "":
+            QMessageBox.warning(self, "Error", "Please fill in the patient details.")
         else:
-            #QMessageBox.information(self, "Successful", 'Patient Exists')
-            cur.execute('SELECT * FROM patients WHERE postcode=? AND mobile=?', (c, d,))
-            pat = cur.fetchone()
-            self.new = Search_Reults.Search_Res(pat)
-            self.new.show()
-            self.txt_name.clear()
-            self.txt_sname.clear()
-            self.txt_post.clear()
-            self.txt_mob.clear()
-        conn.commit()
-        # Close connection
-        conn.close()
+            conn = sqlite3.connect('Patient_DB.db')
+            cur = conn.cursor()
+            a = self.txt_name.text()
+            b = self.txt_sname.text()
+            c = self.txt_post.text()
+            d = self.txt_mob.text()
+            cur.execute('''SELECT first_name, last_name, postcode, mobile FROM patients WHERE first_name=? AND last_name=? AND postcode=? AND mobile=? ''', (a, b, c, d,))
+            exists = cur.fetchall()
+            #print(exists)
+            if not exists:
+                QMessageBox.warning(self, "Error", "Patient Does Not Exist.")
+                self.txt_name.clear()
+                self.txt_sname.clear()
+                self.txt_post.clear()
+                self.txt_mob.clear()
+                return
+            else:
+                #QMessageBox.information(self, "Successful", 'Patient Exists')
+                cur.execute('SELECT * FROM patients WHERE postcode=? AND mobile=?', (c, d,))
+                pat = cur.fetchone()
+                self.new = Search_Reults.Search_Res(pat)
+                self.new.show()
+                self.txt_name.clear()
+                self.txt_sname.clear()
+                self.txt_post.clear()
+                self.txt_mob.clear()
+            conn.commit()
+            # Close connection
+            conn.close()
 
     def btn_Reg_clicked(self):
         self.txt_name.setText("")

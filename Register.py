@@ -159,6 +159,8 @@ class Reg(QWidget):
 
         self.calendar = QCalendarWidget(self)
         self.calendar.setGridVisible(True)
+        self.calendar.setStyleSheet('QCalendarWidget {background-color: rgb(90,31,0)}')
+        self.calendar.setStyleSheet('QCalendarWidget QWidget {alternate-background-color: rgb(100,100,100)}')
         self.calendar.setMinimumDate(QDate(currentYear - 90, currentMonth, 1))
         self.calendar.setMaximumDate(QDate(currentYear, currentMonth, currentDay))
         self.calendar.clicked[QDate].connect(self.showDate)
