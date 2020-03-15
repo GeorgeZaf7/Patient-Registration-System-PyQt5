@@ -1,6 +1,15 @@
+# -*- coding: utf-8 -*-
+# ----------------------------------------------------------------------------
+# File Name:    Medical_Records.py
+# Project Name: Patient Registration System
+# Author:       Georgios Zafeiropoulos
+# Created:      11/03/2020
+# Modified:     13/03/2020
+# Copyright:    (c) Georgios Zafeiropoulos, 2020
+# License:      CC-BY
+# ----------------------------------------------------------------------------
 import sys
 import os
-
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QAction, qApp, QTextEdit, QMessageBox, \
     QFontDialog, QStatusBar, QFileDialog, QGridLayout, QLabel, QDesktopWidget, QFrame
@@ -9,17 +18,17 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 
 
 class Med_Rec(QWidget):
-    def __init__(self): #pat
+    def __init__(self,pat):
         super().__init__()
         self.title = "Patient Registration System"
         self.left = 0
         self.top = 0
         self.width = 640
         self.height = 480
-        #self.patient = pat
-        self.initUI() #self.patient
+        self.patient = pat
+        self.initUI(self.patient) #self.patient
 
-    def initUI(self):
+    def initUI(self,a):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         qtRectangle = self.frameGeometry()
@@ -36,6 +45,7 @@ class Med_Rec(QWidget):
         p.setBrush(QPalette.Window, QBrush(gradient))
         self.setPalette(p)  #
 
+        self.pat = a
 
         grid_layout = QGridLayout()
         self.setLayout(grid_layout)
@@ -52,17 +62,19 @@ class Med_Rec(QWidget):
         self.btn_Read = QPushButton('Retrieve\nPatient\nMedical\nRecords')
         self.btn_Read.setToolTip('Go to previous window')
         self.btn_Read.setFont(QFont('Arial', 14, QFont.Bold))
+        self.btn_Read.setStyleSheet('QPushButton {background-color: #FF0000; color: white;}')
         self.btn_Read.setFixedWidth(200)
         self.btn_Read.setFixedHeight(200)
-        self.btn_Read.clicked.connect(self.close)
+        self.btn_Read.clicked.connect(self.read_MedRec)
         grid_layout.addWidget(self.btn_Read, 1, 0, Qt.AlignCenter)
 
         self.btn_Add = QPushButton('Add\nPatient\nMedical\nRecords')
         self.btn_Add.setToolTip('Go to previous window')
         self.btn_Add.setFont(QFont('Arial', 14, QFont.Bold))
+        self.btn_Add.setStyleSheet('QPushButton {background-color: #FF0000; color: white;}')
         self.btn_Add.setFixedWidth(200)
         self.btn_Add.setFixedHeight(200)
-        self.btn_Add.clicked.connect(self.close)
+        self.btn_Add.clicked.connect(self.add_MedRec)
         grid_layout.addWidget(self.btn_Add, 1, 1, Qt.AlignCenter)
 
         self.btn_Exit = QPushButton('Exit')
@@ -88,10 +100,18 @@ class Med_Rec(QWidget):
         grid_layout.addWidget(self.lbl_ariston, 3+1, 0, 1, 2)
 
 
+    def read_MedRec(self):
+        path_name = str(self.patient[1]) + "_" + str(self.patient[2]) + ".db"
+        look_up_folder = "./Patient_Medical_Records/" + path_name
+        if os.path.isfile(look_up_folder):
+            QMessageBox.information(self,'Yuppi!!', 'Douleuei!!')
+        else:
+            QMessageBox.warning(self,'Warning','No Medical Records found.')
 
-
-if __name__ == '__main__':
+    def add_MedRec(self):
+        return
+'''if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = Med_Rec()
     ex.show()
-    sys.exit(app.exec())
+    sys.exit(app.exec())'''

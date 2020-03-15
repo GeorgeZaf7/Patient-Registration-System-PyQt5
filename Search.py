@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------
 # File Name:    Search.py
@@ -118,6 +119,7 @@ class Search(QWidget):
         self.btn_Search.setToolTip('Login')
         self.btn_Search.setFont(QFont('Arial', 14, QFont.Bold))
         self.btn_Search.setStyleSheet('QPushButton {background-color: #FF0000; color: white;}')
+
         self.btn_Search.setFixedWidth(300)
         self.btn_Search.setFixedHeight(40)
         self.btn_Search.clicked.connect(self.btn_search_clicked)

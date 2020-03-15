@@ -18,6 +18,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QAc
 from PyQt5.QtGui import QIcon, QFont, QPalette, QLinearGradient, QColor, QBrush
 from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtCore import Qt
+import Medical_Records
 
 
 class Search_Res(QWidget):
@@ -50,7 +51,7 @@ class Search_Res(QWidget):
 
         grid_layout = QGridLayout()
         self.setLayout(grid_layout)
-
+        pat = a
         self.lbl_pag_title = QLabel('Search Results')
         self.lbl_pag_title.setFont(QtGui.QFont("Arial", 25, QFont.Bold))
         self.lbl_pag_title.setAlignment(QtCore.Qt.AlignCenter)
@@ -76,7 +77,7 @@ class Search_Res(QWidget):
         self.btn_MedRec.setFont(QFont('Arial', 14, QFont.Bold))
         self.btn_MedRec.setFixedWidth(300)
         self.btn_MedRec.setFixedHeight(40)
-        self.btn_MedRec.clicked.connect(self.close)
+        self.btn_MedRec.clicked.connect(self.open_MedRec)
         grid_layout.addWidget(self.btn_MedRec, 3, 0, 1, 2, Qt.AlignJustify)
 
         self.btn_Clr = QPushButton('Print')
@@ -112,7 +113,9 @@ class Search_Res(QWidget):
 
         # Functions for buttons
 
-
+    def open_MedRec(self):
+        self.new = Medical_Records.Med_Rec(self.patient)
+        self.new.show()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
