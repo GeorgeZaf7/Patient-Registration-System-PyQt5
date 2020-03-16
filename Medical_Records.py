@@ -10,15 +10,18 @@
 # ----------------------------------------------------------------------------
 import sys
 import os
-from PyQt5.QtCore import Qt
+from datetime import datetime
+from PyQt5.QtCore import Qt, QDate
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QAction, qApp, QTextEdit, QMessageBox, \
-    QFontDialog, QStatusBar, QFileDialog, QGridLayout, QLabel, QDesktopWidget, QFrame
+    QFontDialog, QStatusBar, QFileDialog, QGridLayout, QLabel, QDesktopWidget, QFrame, QDialog, QCalendarWidget, \
+    QHBoxLayout
 from PyQt5.QtGui import QIcon, QFont, QPalette, QLinearGradient, QColor, QBrush
 from PyQt5 import QtCore, QtWidgets, QtGui
+import Add_Medical_Record
 
 
 class Med_Rec(QWidget):
-    def __init__(self,pat):
+    def __init__(self, pat):
         super().__init__()
         self.title = "Patient Registration System"
         self.left = 0
@@ -26,9 +29,9 @@ class Med_Rec(QWidget):
         self.width = 640
         self.height = 480
         self.patient = pat
-        self.initUI(self.patient) #self.patient
+        self.initUI(self.patient)  # self.patient
 
-    def initUI(self,a):
+    def initUI(self, a):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         qtRectangle = self.frameGeometry()
@@ -50,7 +53,6 @@ class Med_Rec(QWidget):
         grid_layout = QGridLayout()
         self.setLayout(grid_layout)
 
-
         self.lbl_pag_title = QLabel('Patient Medical Records')
         self.lbl_pag_title.setFont(QtGui.QFont("Arial", 25, QFont.Bold))
         self.lbl_pag_title.setAlignment(QtCore.Qt.AlignCenter)
@@ -58,7 +60,7 @@ class Med_Rec(QWidget):
         self.lbl_pag_title.setFixedHeight(50)
         grid_layout.addWidget(self.lbl_pag_title, 0, 0, 1, 2)
 
-        #================================
+        # ================================
         self.btn_Read = QPushButton('Retrieve\nPatient\nMedical\nRecords')
         self.btn_Read.setToolTip('Go to previous window')
         self.btn_Read.setFont(QFont('Arial', 14, QFont.Bold))
@@ -88,7 +90,7 @@ class Med_Rec(QWidget):
         # ===============================
         self.empty = QLabel('')
         self.empty.setFixedHeight(70)
-        grid_layout.addWidget(self.empty, 3, 0, 1, 2 )
+        grid_layout.addWidget(self.empty, 3, 0, 1, 2)
 
         self.lbl_ariston = QLabel('© AristonAQ Ltd, 2020')
         self.lbl_ariston.setFont(QtGui.QFont("Times", 8))
@@ -97,19 +99,23 @@ class Med_Rec(QWidget):
         self.lbl_ariston.setFrameShadow(QFrame.Sunken)
         self.lbl_ariston.setLineWidth(2)  # lbl_user.setFixedWidth(100)
         self.lbl_ariston.setFixedHeight(20)
-        grid_layout.addWidget(self.lbl_ariston, 3+1, 0, 1, 2)
-
+        grid_layout.addWidget(self.lbl_ariston, 3 + 1, 0, 1, 2)
 
     def read_MedRec(self):
-        path_name = str(self.patient[1]) + "_" + str(self.patient[2]) + ".db"
-        look_up_folder = "./Patient_Medical_Records/" + path_name
+        path_name = str(self.pat[1]) + "_" + str(self.pat[2]) + ".db"
+        look_up_folder = "C:/Users/Georgios/PycharmProjects/Patient_Registration_System/Patient_Medical_Records/" + path_name
         if os.path.isfile(look_up_folder):
-            QMessageBox.information(self,'Yuppi!!', 'Douleuei!!')
+            # print(self.calendar.date)
+            QMessageBox.information(self, 'Yeah', 'Douleuei!!')
         else:
-            QMessageBox.warning(self,'Warning','No Medical Records found.')
+            QMessageBox.warning(self, 'Warning', 'No Medical Records found.')
+        return
 
     def add_MedRec(self):
-        return
+        self.medrec = Add_Medical_Record.Add_Med_Rec(self.pat)
+        self.medrec.show()
+
+
 '''if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = Med_Rec()
