@@ -7,17 +7,20 @@
 # Copyright:    (c) Georgios Zafeiropoulos, 2020
 # License:      CC-BY
 # ----------------------------------------------------------------------------
+import sqlite3
+import time
 from datetime import datetime
 import sys
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtCore import QDate
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QLinearGradient, QBrush, QColor, QPalette, QFont, QIcon
-from PyQt5.QtWidgets import QWidget, QGridLayout, QDesktopWidget, QLabel, QFrame, QApplication, QCalendarWidget
+from PyQt5.QtWidgets import QWidget, QGridLayout, QDesktopWidget, QLabel, QFrame, QApplication, QCalendarWidget, \
+    QPushButton, QComboBox
 
 
 class Search_MedRec(QWidget):
-    def __init__(self): #pat
+    def __init__(self):  # pat
         super().__init__()
         self.title = "Patient Registration System"
         self.left = 0
@@ -29,10 +32,10 @@ class Search_MedRec(QWidget):
         currentMonth = datetime.now().month
         currentYear = datetime.now().year
 
-        #self.patient = pat
-        self.initUI() #self.patient
+        # self.patient = pat
+        self.initUI()  # self.patient
 
-    def initUI(self): #a
+    def initUI(self):  # a
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         qtRectangle = self.frameGeometry()
@@ -49,7 +52,7 @@ class Search_MedRec(QWidget):
         p.setBrush(QPalette.Window, QBrush(gradient))
         self.setPalette(p)  #
 
-        #self.pat = a
+        # self.pat = a
 
         grid_layout = QGridLayout()
         self.setLayout(grid_layout)
@@ -64,27 +67,70 @@ class Search_MedRec(QWidget):
         self.empty = QLabel('')
         self.empty.setFixedHeight(40)
         grid_layout.addWidget(self.empty, 1, 0, 1, 2)
-        #================================
-        self.lbl_guide_txt = QLabel('Choose the date after which you want to search:')
+        # ================================
+        self.lbl_guide_txt = QLabel('Choose the time frame you want to search:')
         self.lbl_guide_txt.setFont(QtGui.QFont("Arial", 12, QFont.Bold))
         # self.lbl_pag_title.setFixedWidth(100)
         self.lbl_guide_txt.setFixedHeight(50)
         grid_layout.addWidget(self.lbl_guide_txt, 2, 0, 1, 2, Qt.AlignCenter)
 
-        self.calendar = QCalendarWidget(self)
+        self.lbl_month = QLabel('Choose month:')
+        self.lbl_month.setFont(QtGui.QFont("Arial", 12, QFont.Bold))
+        # self.lbl_pag_title.setFixedWidth(100)
+        self.lbl_month.setFixedHeight(50)
+        grid_layout.addWidget(self.lbl_month, 3, 0, Qt.AlignRight)
+
+        self.lbl_year = QLabel('Choose year:')
+        self.lbl_year.setFont(QtGui.QFont("Arial", 12, QFont.Bold))
+        # self.lbl_pag_title.setFixedWidth(100)
+        self.lbl_year.setFixedHeight(50)
+        grid_layout.addWidget(self.lbl_year, 4, 0, Qt.AlignRight)
+
+        self.txt_month = QComboBox(self)
+        self.txt_month.addItems(["01", "02", "03", "04", "05", "06","07", "08", "09", "10", "11", "12"])
+        self.txt_month.setFixedWidth(100)
+        self.txt_month.setFont(QtGui.QFont("Arial", 12))
+        grid_layout.addWidget(self.txt_month, 3, 1, Qt.AlignLeft)
+
+        self.txt_year = QComboBox(self)
+        self.txt_year.addItems(["2017", "2018", "2019", "2020", "2021", "2022"])
+        self.txt_year.setFixedWidth(100)
+        self.txt_year.setFont(QtGui.QFont("Arial", 12))
+        grid_layout.addWidget(self.txt_year, 4, 1, Qt.AlignLeft)
+        self.txt_year.currentIndexChanged.connect(self.selectionchange)
+
+        '''self.calendar = QCalendarWidget(self)
         self.calendar.setGridVisible(True)
         self.calendar.setStyleSheet('QCalendarWidget {background-color: rgb(90,31,0)}')
         self.calendar.setStyleSheet('QCalendarWidget QWidget {alternate-background-color: rgb(100,100,100)}')
         self.calendar.setMinimumDate(QDate(currentYear - 90, currentMonth, 1))
         self.calendar.setMaximumDate(QDate(currentYear, currentMonth, currentDay))
         self.calendar.clicked[QDate].connect(self.showDate)
-        grid_layout.addWidget(self.calendar, 3, 0, 1, 2, Qt.AlignJustify)
+        grid_layout.addWidget(self.calendar, 3, 0, 1, 2, Qt.AlignJustify)'''
 
+        # BUTTONS===============================================
+        self.btn_Submit = QPushButton('Submit')
+        self.btn_Submit.setToolTip('Add Medical Notes')
+        self.btn_Submit.setStyleSheet('QPushButton {background-color: #FF0000; color: white;}')
+        self.btn_Submit.setFont(QFont('Arial', 14, QFont.Bold))
+        self.btn_Submit.setFixedWidth(300)
+        self.btn_Submit.setFixedHeight(40)
+        self.btn_Submit.clicked.connect(self.btn_submit_clicked)
+        grid_layout.addWidget(self.btn_Submit, 5, 0, 1, 2, Qt.AlignCenter)
+
+        self.btn_Exit = QPushButton('Exit')
+        self.btn_Exit.setToolTip('Go to previous window')
+        self.btn_Exit.setFont(QFont('Arial', 14, QFont.Bold))
+        self.btn_Exit.setStyleSheet('QPushButton {color: #FF0000;}')
+        self.btn_Exit.setFixedWidth(300)
+        self.btn_Exit.setFixedHeight(40)
+        self.btn_Exit.clicked.connect(self.close)
+        grid_layout.addWidget(self.btn_Exit, 6, 0, 1, 2, Qt.AlignCenter)
 
         # ===============================
         self.empty = QLabel('')
         self.empty.setFixedHeight(70)
-        grid_layout.addWidget(self.empty, 4, 0, 1, 2)
+        grid_layout.addWidget(self.empty, 7, 0, 1, 2)
 
         self.lbl_ariston = QLabel('© AristonAQ Ltd, 2020')
         self.lbl_ariston.setFont(QtGui.QFont("Times", 8))
@@ -93,14 +139,47 @@ class Search_MedRec(QWidget):
         self.lbl_ariston.setFrameShadow(QFrame.Sunken)
         self.lbl_ariston.setLineWidth(2)  # lbl_user.setFixedWidth(100)
         self.lbl_ariston.setFixedHeight(20)
-        grid_layout.addWidget(self.lbl_ariston, 5 + 1, 0, 1, 2)
+        grid_layout.addWidget(self.lbl_ariston, 7 + 1, 0, 1, 2)
 
     # ===================Functions==============================
 
+    def selectionchange(self, i):
+        print("Items in the list are :")
+        for count in range(self.txt_year.count()):
+            print(self.txt_year.itemText(count))
+        print("Current index", i, "selection changed ", self.txt_year.currentText())
+
     def showDate(self, date):
-        global search_date
-        search_date = date.toString('dd-MM-yyyy')
-        #print(search_date)
+        global search_date1, search_date
+        search_date1 = date.toString('MM')
+        # search_date2 = date.toString('yyyy')
+        print(search_date1)
+        # print(search_date2)
+
+    def btn_submit_clicked(self):
+        conn = sqlite3.connect(
+            "C:/Users/Georgios/PycharmProjects/Patient_Registration_System/Patient_Medical_Records/Nick_Smith.db")
+        cur = conn.cursor()
+
+        lookForMonth = search_date1
+        # lookforYear = search_date2
+        sqlCmd = 'SELECT date from pat_med_rec WHERE SUBSTR(date,4,2)="%.2i"' % int(lookForMonth)
+
+        cur.execute(sqlCmd)
+        alpha = cur.fetchall()
+        alpha1 = list(alpha)
+        alpha2 = alpha1[0]
+        '''newdate1 = time.strptime(str(alpha[0]),"%dd/%MM/%yyyy")
+        newdate2 = time.strptime(str(alpha[2]),"%dd/%MM/%yyyy")
+        if newdate1<newdate2:
+            print('Correct!')
+        else:
+            print('False!')'''
+        print(alpha2)
+
+        conn.commit()
+        conn.close()
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
