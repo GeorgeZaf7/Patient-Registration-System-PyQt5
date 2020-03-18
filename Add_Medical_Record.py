@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------
-# File Name:    Medical_Records.py
+# File Name:    Add_Medical_Record.py
 # Project Name: Patient Registration System
 # Author:       Georgios Zafeiropoulos
 # Created:      16/03/2020
@@ -79,8 +79,9 @@ class Add_Med_Rec(QWidget):
         self.lbl_pat_id_1.setFixedHeight(20)
         grid_layout.addWidget(self.lbl_pat_id_1, 3, 0, 1, 2, Qt.AlignLeft)
 
-        self.date_now =  QDate.currentDate().toString('dd/MM/yyyy')
-        self.date_now_1 = 'Date: ' + self.date_now
+        self.date_now =  QDate.currentDate().toString('yyyy-MM-dd')
+        self.date_visual = QDate.currentDate().toString('dd/MM/yyyy')
+        self.date_now_1 = 'Date: ' + self.date_visual
         self.lbl_pat_id = QLabel(self.date_now_1)
         self.lbl_pat_id.setFont(QtGui.QFont("Arial", 12, QFont.Bold))
         self.lbl_pat_id.setAlignment(QtCore.Qt.AlignCenter)
@@ -88,24 +89,25 @@ class Add_Med_Rec(QWidget):
         self.lbl_pat_id.setFixedHeight(20)
         grid_layout.addWidget(self.lbl_pat_id, 4, 0, 1, 2, Qt.AlignLeft)
 
-        self.lbl_notes = QLabel('Notes:')
+        '''self.lbl_notes = QLabel('Notes:')
         self.lbl_notes.setFont(QtGui.QFont("Arial", 12, QFont.Bold))
         self.lbl_notes.setAlignment(QtCore.Qt.AlignCenter)
         # self.lbl_pag_title.setFixedWidth(100)
         self.lbl_notes.setFixedHeight(20)
-        grid_layout.addWidget(self.lbl_notes, 5, 0, 1, 2, Qt.AlignLeft)
+        grid_layout.addWidget(self.lbl_notes, 5, 0, 1, 2, Qt.AlignLeft)'''
 
 
         self.txt_pat_info = QTextEdit(self)
         self.txt_pat_info.setReadOnly(False)
         self.txt_pat_info.setFont(QFont('Arial', 12))
         self.txt_pat_info.setText('')
+        self.txt_pat_info.setPlaceholderText('Add Notes')
         self.txt_pat_info.setFrameShape(QFrame.WinPanel)
         self.txt_pat_info.setFrameShadow(QFrame.Sunken)
         self.txt_pat_info.setLineWidth(3)
         self.txt_pat_info.setFixedWidth(620)
         self.txt_pat_info.setFixedHeight(300)
-        grid_layout.addWidget(self.txt_pat_info, 6, 0, 1, 2, Qt.AlignLeft)
+        grid_layout.addWidget(self.txt_pat_info, 5, 0, 1, 2, Qt.AlignLeft)
 
         # BUTTONS===============================================
         self.btn_Submit = QPushButton('Submit')
@@ -115,13 +117,13 @@ class Add_Med_Rec(QWidget):
         self.btn_Submit.setFixedWidth(150)
         self.btn_Submit.setFixedHeight(40)
         self.btn_Submit.clicked.connect(self.btn_submit_clicked)
-        grid_layout.addWidget(self.btn_Submit, 7, 0, 1, 2, Qt.AlignCenter)
+        grid_layout.addWidget(self.btn_Submit, 6, 0, 1, 2, Qt.AlignCenter)
 
 
         # ===============================
         self.empty = QLabel('')
         self.empty.setFixedHeight(70)
-        grid_layout.addWidget(self.empty, 8, 0, 1, 2)
+        grid_layout.addWidget(self.empty, 7, 0, 1, 2)
 
         self.lbl_ariston = QLabel('© AristonAQ Ltd, 2020')
         self.lbl_ariston.setFont(QtGui.QFont("Times", 8))
@@ -130,7 +132,7 @@ class Add_Med_Rec(QWidget):
         self.lbl_ariston.setFrameShadow(QFrame.Sunken)
         self.lbl_ariston.setLineWidth(2)  # lbl_user.setFixedWidth(100)
         self.lbl_ariston.setFixedHeight(20)
-        grid_layout.addWidget(self.lbl_ariston, 8 + 1, 0, 1, 2)
+        grid_layout.addWidget(self.lbl_ariston, 7 + 1, 0, 1, 2)
 
 
     def btn_submit_clicked(self):

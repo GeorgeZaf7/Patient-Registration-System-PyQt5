@@ -234,7 +234,7 @@ class Reg(QWidget):
 
     def showDate(self, date):
         global new
-        new = date.toString('dd-MM-yyyy')
+        new = date.toString('yyyy-MM-dd')
         print(new)
 
 

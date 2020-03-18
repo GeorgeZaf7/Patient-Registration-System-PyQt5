@@ -14,8 +14,13 @@ patient_id = """INSERT INTO pat_med_rec (pat_id, pat_name, date, notes) VALUES (
 
 id_pat = 3
 name = 'Nick Smith'
-datenow = '05/02/2020'
-notetext = 'Test test test test test test test'
+datenow = '2019-10-13'
+notetext = 'Test test test test test test'
 cur.execute(patient_id, (id_pat, name, datenow, notetext))
+
+
+cur.execute('''SELECT * from pat_med_rec''')
+print(cur.fetchall())
+
 conn.commit()
 conn.close()
