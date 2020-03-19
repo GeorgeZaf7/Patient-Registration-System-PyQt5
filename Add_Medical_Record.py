@@ -4,7 +4,7 @@
 # Project Name: Patient Registration System
 # Author:       Georgios Zafeiropoulos
 # Created:      16/03/2020
-# Modified:     16/03/2020
+# Modified:     19/03/2020
 # Copyright:    (c) Georgios Zafeiropoulos, 2020
 # License:      CC-BY
 # ----------------------------------------------------------------------------

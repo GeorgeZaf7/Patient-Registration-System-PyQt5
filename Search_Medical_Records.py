@@ -3,7 +3,7 @@
 # Project Name: Patient Registration System
 # Author:       Georgios Zafeiropoulos
 # Created:      16/03/2020
-# Modified:     16/03/2020
+# Modified:     19/03/2020
 # Copyright:    (c) Georgios Zafeiropoulos, 2020
 # License:      CC-BY
 # ----------------------------------------------------------------------------
@@ -16,11 +16,11 @@ from PyQt5.QtCore import QDate
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QLinearGradient, QBrush, QColor, QPalette, QFont, QIcon
 from PyQt5.QtWidgets import QWidget, QGridLayout, QDesktopWidget, QLabel, QFrame, QApplication, QCalendarWidget, \
-    QPushButton, QComboBox, QDialog, QTextEdit
+    QPushButton, QComboBox, QDialog, QTextEdit, QVBoxLayout, QHBoxLayout, QMessageBox
 
 
 class Search_MedRec(QWidget):
-    def __init__(self):  # pat
+    def __init__(self,pat):  # pat
         super().__init__()
         self.title = "Patient Registration System"
         self.left = 0
@@ -32,10 +32,10 @@ class Search_MedRec(QWidget):
         currentMonth = datetime.now().month
         currentYear = datetime.now().year
 
-        # self.patient = pat
-        self.initUI()  # self.patient
+        self.patient = pat
+        self.initUI(self.patient)  # self.patient
 
-    def initUI(self):  # a
+    def initUI(self,a):  # a
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         qtRectangle = self.frameGeometry()
@@ -52,7 +52,7 @@ class Search_MedRec(QWidget):
         p.setBrush(QPalette.Window, QBrush(gradient))
         self.setPalette(p)  #
 
-        # self.pat = a
+        self.pat = a
 
         grid_layout = QGridLayout()
         self.setLayout(grid_layout)
@@ -154,18 +154,33 @@ class Search_MedRec(QWidget):
         search_date = date.toString('yyyy-MM-dd')
 
     def btn_submit_clicked(self):
-        conn = sqlite3.connect(
-            "C:/Users/Georgios/PycharmProjects/Patient_Registration_System/Patient_Medical_Records/Nick_Smith.db")
-        cur = conn.cursor()
+        db_url = self.pat
+        try:
+            conn = sqlite3.connect(db_url)
+                #"C:/Users/Georgios/PycharmProjects/Patient_Registration_System/Patient_Medical_Records/Nick_Smith.db")
+            cur = conn.cursor()
+            check_date = QDate.currentDate().toString('yyyy-MM-dd')
+            if search_date == check_date:
+                QMessageBox.warning(self, 'Warning', 'You need to choose an older date')
+                return
+            else:
+                cur.execute('''SELECT * from pat_med_rec WHERE date > ?''', (search_date,))
+                columns = cur.fetchall()
+                if not columns:
+                    QMessageBox.information(self, 'Warning', 'No records for that time period.')
+                    return
+                else:
+                    self.info_pat = QDialog(self)
+                    self.info_pat.setWindowTitle('Records')
+                    self.layout = QHBoxLayout(self)
+                    self.txt_database = QTextEdit(self)
+                    self.txt_database.setText(str(columns))
+                    self.layout.addWidget(self.txt_database)
+                    self.info_pat.show()
+        except sqlite3.Error as e:
+                QMessageBox.warning(self,'Warning', 'A problem Occured')
 
-        cur.execute('''SELECT * from pat_med_rec WHERE date > ?''', (search_date,))
-        columns = cur.fetchall()
-        self.info_pat = QDialog(self)
-        self.info_pat.setWindowTitle('Records')
-        self.txt_database = QTextEdit(self)
-        self.txt_database.setText(str(columns))
-        self.setCentralWidget(self.txt_database)
-        self.info_pat.show()
+
         '''desc = cur.description
         print("{0} {1:>10} {2:>15} {3:>15}".format(desc[0][0], desc[1][0], desc[2][0], desc[3][0]))
 

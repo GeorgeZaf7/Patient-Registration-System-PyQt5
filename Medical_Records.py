@@ -18,6 +18,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QAc
 from PyQt5.QtGui import QIcon, QFont, QPalette, QLinearGradient, QColor, QBrush
 from PyQt5 import QtCore, QtWidgets, QtGui
 import Add_Medical_Record
+import Search_Medical_Records
 
 
 class Med_Rec(QWidget):
@@ -106,7 +107,9 @@ class Med_Rec(QWidget):
         look_up_folder = "C:/Users/Georgios/PycharmProjects/Patient_Registration_System/Patient_Medical_Records/" + path_name
         if os.path.isfile(look_up_folder):
             # print(self.calendar.date)
-            QMessageBox.information(self, 'Yeah', 'Douleuei!!')
+            #QMessageBox.information(self, 'Yeah', 'Douleuei!!')
+            self.readMedRec = Search_Medical_Records.Search_MedRec(look_up_folder)
+            self.readMedRec.show()
         else:
             QMessageBox.warning(self, 'Warning', 'No Medical Records found.')
         return
