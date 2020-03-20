@@ -137,7 +137,8 @@ class Add_Med_Rec(QWidget):
 
     def btn_submit_clicked(self):
         path_name = str(self.patient[1]) + "_" + str(self.patient[2]) + ".db"
-        look_up_folder = "C:/Users/Georgios/PycharmProjects/Patient_Registration_System/Patient_Medical_Records/" + path_name
+        #look_up_folder = "C:/Users/Georgios/PycharmProjects/Patient_Registration_System/Patient_Medical_Records/" + path_name
+        look_up_folder = "C:/Users/zafir/PycharmProjects/Patient_Registration_System/Patient_Medical_Records/" + path_name
         print(look_up_folder)
         try:
             conn = sqlite3.connect(look_up_folder)
@@ -160,9 +161,6 @@ class Add_Med_Rec(QWidget):
             QMessageBox.information(self, 'Success!', 'Notes have been added.')
         except sqlite3.Error as e:
             print(e)
-        finally:
-            if conn:
-                conn.close()
 
 
 '''if __name__ == '__main__':

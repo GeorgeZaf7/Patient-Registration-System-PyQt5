@@ -17,6 +17,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QLinearGradient, QBrush, QColor, QPalette, QFont, QIcon
 from PyQt5.QtWidgets import QWidget, QGridLayout, QDesktopWidget, QLabel, QFrame, QApplication, QCalendarWidget, \
     QPushButton, QComboBox, QDialog, QTextEdit, QVBoxLayout, QHBoxLayout, QMessageBox
+import Show_MedRec_Search_Results
 
 
 class Search_MedRec(QWidget):
@@ -170,13 +171,9 @@ class Search_MedRec(QWidget):
                     QMessageBox.information(self, 'Warning', 'No records for that time period.')
                     return
                 else:
-                    self.info_pat = QDialog(self)
-                    self.info_pat.setWindowTitle('Records')
-                    self.layout = QHBoxLayout(self)
-                    self.txt_database = QTextEdit(self)
-                    self.txt_database.setText(str(columns))
-                    self.layout.addWidget(self.txt_database)
-                    self.info_pat.show()
+                    self.showRes = Show_MedRec_Search_Results.Show_MedRec_Srch_Res(columns)
+                    self.showRes.show()
+                    #print(len(columns))
         except sqlite3.Error as e:
                 QMessageBox.warning(self,'Warning', 'A problem Occured')
 

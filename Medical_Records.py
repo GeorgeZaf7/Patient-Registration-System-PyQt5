@@ -104,7 +104,9 @@ class Med_Rec(QWidget):
 
     def read_MedRec(self):
         path_name = str(self.pat[1]) + "_" + str(self.pat[2]) + ".db"
-        look_up_folder = "C:/Users/Georgios/PycharmProjects/Patient_Registration_System/Patient_Medical_Records/" + path_name
+        #look_up_folder = "C:/Users/Georgios/PycharmProjects/Patient_Registration_System/Patient_Medical_Records/" + path_name
+        look_up_folder = "C:/Users/zafir/PycharmProjects/Patient_Registration_System/Patient_Medical_Records/" + path_name
+
         if os.path.isfile(look_up_folder):
             # print(self.calendar.date)
             #QMessageBox.information(self, 'Yeah', 'Douleuei!!')
