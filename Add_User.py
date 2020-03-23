@@ -120,6 +120,7 @@ class AddUsr(QWidget):
         self.btn_Clear.setFont(QFont('Arial', 14, QFont.Bold))
         self.btn_Clear.setFixedWidth(150)
         self.btn_Clear.setFixedHeight(40)
+        self.btn_Clear.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.btn_Clear.clicked.connect(self.btn_clr_clicked)
         grid_layout.addWidget(self.btn_Clear, 8, 0)
 
@@ -129,6 +130,7 @@ class AddUsr(QWidget):
         self.btn_Submit.setStyleSheet('QPushButton {background-color: #FF0000; color: white;}')
         self.btn_Submit.setFixedWidth(150)
         self.btn_Submit.setFixedHeight(40)
+        self.btn_Submit.setFocusPolicy(QtCore.Qt.StrongFocus)
         self. btn_Submit.clicked.connect(self.btn_submit_clicked)
         grid_layout.addWidget(self.btn_Submit, 8, 1)
 
@@ -137,7 +139,8 @@ class AddUsr(QWidget):
         self.btn_Back.setFont(QFont('Arial', 14, QFont.Bold))
         self.btn_Back.setFixedWidth(150)
         self.btn_Back.setFixedHeight(40)
-        self.btn_Back.clicked.connect(self.close)
+        self.btn_Back.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.btn_Back.clicked.connect(self.btn_back_clicked)
         grid_layout.addWidget(self.btn_Back, 8, 2)
 
         self.empty = QLabel('')
@@ -187,8 +190,22 @@ class AddUsr(QWidget):
             self.txt_Sname.setText("")
         conn.commit()
 
-if __name__ == '__main__':
+    def btn_back_clicked(self):
+        self.close()
+
+    def keyPressEvent(self, event):
+        #if event.key() == Qt.Key_Return:
+            #self.btn_submit_clicked()
+        if event.key() == Qt.Key_Enter or event.key() == Qt.Key_Return:
+            if self.btn_Submit.hasFocus():
+                self.btn_submit_clicked()
+            if self.btn_Clear.hasFocus():
+                self.btn_clr_clicked()
+            if self.btn_Back.hasFocus():
+                self.btn_back_clicked()
+
+'''if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = AddUsr()
     ex.show()
-    sys.exit(app.exec())
+    sys.exit(app.exec())'''

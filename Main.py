@@ -101,6 +101,7 @@ class Main(QWidget):
         self.btn_Submit.setFont(QFont('Arial', 14, QFont.Bold))
         self.btn_Submit.setFixedWidth(150)
         self.btn_Submit.setFixedHeight(40)
+        self.btn_Submit.setFocusPolicy(QtCore.Qt.StrongFocus)
         self. btn_Submit.clicked.connect(self.btn_submit_clicked)
         grid_layout.addWidget(self.btn_Submit, 5, 1)
 
@@ -109,6 +110,7 @@ class Main(QWidget):
         self.btn_Clear.setFont(QFont('Arial', 14, QFont.Bold))
         self.btn_Clear.setFixedWidth(150)
         self.btn_Clear.setFixedHeight(40)
+        self.btn_Clear.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.btn_Clear.clicked.connect(self.btn_clr_clicked)
         grid_layout.addWidget(self.btn_Clear, 5, 0)
 
@@ -117,6 +119,7 @@ class Main(QWidget):
         self.btn_Exit.setFont(QFont('Arial', 14, QFont.Bold))
         self.btn_Exit.setFixedWidth(150)
         self.btn_Exit.setFixedHeight(40)
+        self.btn_Exit.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.btn_Exit.clicked.connect(self.btn_exit_clicked)
         grid_layout.addWidget(self.btn_Exit, 5, 2)
 
@@ -126,6 +129,7 @@ class Main(QWidget):
         self.btn_AddUser.setFont(QFont('Arial', 14, QFont.Bold))
         self.btn_AddUser.setFixedWidth(150)
         self.btn_AddUser.setFixedHeight(40)
+        self.btn_AddUser.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.btn_AddUser.clicked.connect(self.btn_addusr_clicked)
         self.dialogs = list()
         grid_layout.addWidget(self.btn_AddUser, 6, 1)
@@ -174,6 +178,8 @@ class Main(QWidget):
             self.dialogs.show()
         conn.commit()
         conn.close()
+        self.showMinimized()
+
 
     def btn_addusr_clicked(self):
         conn = sqlite3.connect('Login_Details_Database.db')
@@ -198,6 +204,20 @@ class Main(QWidget):
         conn.commit()
         # Close connection
         conn.close()
+        self.showMinimized()
+
+    def keyPressEvent(self, event):
+        #if event.key() == Qt.Key_Return:
+            #self.btn_submit_clicked()
+        if event.key() == Qt.Key_Enter or event.key() == Qt.Key_Return:
+            if self.btn_Submit.hasFocus():
+                self.btn_submit_clicked()
+            if self.btn_Exit.hasFocus():
+                self.btn_exit_clicked()
+            if self.btn_AddUser.hasFocus():
+                self.btn_addusr_clicked()
+            if self.btn_Clear.hasFocus():
+                self.btn_clr_clicked()
 
 
 if __name__ == '__main__':

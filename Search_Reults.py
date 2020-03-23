@@ -77,24 +77,27 @@ class Search_Res(QWidget):
         self.btn_MedRec.setFont(QFont('Arial', 14, QFont.Bold))
         self.btn_MedRec.setFixedWidth(300)
         self.btn_MedRec.setFixedHeight(40)
+        self.btn_MedRec.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.btn_MedRec.clicked.connect(self.open_MedRec)
         grid_layout.addWidget(self.btn_MedRec, 3, 0, 1, 2, Qt.AlignJustify)
 
-        self.btn_Clr = QPushButton('Print')
-        self.btn_Clr.setToolTip('Print')
-        self.btn_Clr.setFont(QFont('Arial', 14, QFont.Bold))
-        self.btn_Clr.setStyleSheet('QPushButton {color: #FF0000;}')
-        self.btn_Clr.setFixedWidth(300)
-        self.btn_Clr.setFixedHeight(40)
-        #self.btn_Clr.clicked.connect(self.btn_clr_clicked)
-        grid_layout.addWidget(self.btn_Clr, 4, 0, 1, 2, Qt.AlignJustify)
+        self.btn_Print = QPushButton('Print')
+        self.btn_Print.setToolTip('Print')
+        self.btn_Print.setFont(QFont('Arial', 14, QFont.Bold))
+        self.btn_Print.setStyleSheet('QPushButton {color: #FF0000;}')
+        self.btn_Print.setFixedWidth(300)
+        self.btn_Print.setFixedHeight(40)
+        self.btn_Print.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.btn_Print.clicked.connect(self.btn_print_clicked)
+        grid_layout.addWidget(self.btn_Print, 4, 0, 1, 2, Qt.AlignJustify)
 
         self.btn_Back = QPushButton('Back')
         self.btn_Back.setToolTip('Clear Sections')
         self.btn_Back.setFont(QFont('Arial', 14, QFont.Bold))
         self.btn_Back.setFixedWidth(300)
         self.btn_Back.setFixedHeight(40)
-        self.btn_Back.clicked.connect(self.close)
+        self.btn_Back.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.btn_Back.clicked.connect(self.btn_back_clicked)
         grid_layout.addWidget(self.btn_Back, 5, 0, 1, 2, Qt.AlignJustify)
 
         # ===============================
@@ -116,9 +119,23 @@ class Search_Res(QWidget):
     def open_MedRec(self):
         self.new = Medical_Records.Med_Rec(self.patient)
         self.new.show()
+    def btn_print_clicked(self):
+        return
 
-if __name__ == '__main__':
+    def btn_back_clicked(self):
+        self.close()
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Enter or event.key() == Qt.Key_Return:
+            if self.btn_MedRec.hasFocus():
+                self.open_MedRec()
+            if self.btn_Print.hasFocus():
+                self.btn_print_clicked()
+            if self.btn_Back.hasFocus():
+                self.btn_back_clicked()
+
+'''if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = Search_Res()
     ex.show()
-    sys.exit(app.exec())
+    sys.exit(app.exec())'''

@@ -6,18 +6,18 @@
 # Modified:     20/03/2020
 # Copyright:    (c) Georgios Zafeiropoulos, 2020
 # License:      CC-BY
+# Comments:     N/A
 # ----------------------------------------------------------------------------
-import sqlite3
-import time
-from datetime import datetime
+
 import sys
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 from PyQt5.QtCore import QDate
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QLinearGradient, QBrush, QColor, QPalette, QFont, QIcon
 from PyQt5.QtWidgets import QWidget, QGridLayout, QDesktopWidget, QLabel, QFrame, QApplication, QCalendarWidget, \
     QPushButton, QComboBox, QDialog, QTextEdit, QVBoxLayout, QHBoxLayout, QMessageBox, QTableWidget, QTableWidgetItem, \
     QTableView
+import Print_Selected_MedRec_Result
 
 
 class Show_MedRec_Srch_Res(QWidget):
@@ -28,15 +28,10 @@ class Show_MedRec_Srch_Res(QWidget):
         self.top = 0
         self.width = 640
         self.height = 480
-        global currentYear, currentMonth, currentDay
-        currentDay = datetime.now().day
-        currentMonth = datetime.now().month
-        currentYear = datetime.now().year
-
         self.patient = pat
         self.initUI(self.patient)  # self.patient
 
-    def initUI(self,a):  # a
+    def initUI(self, a):  # a
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         qtRectangle = self.frameGeometry()
@@ -70,22 +65,43 @@ class Show_MedRec_Srch_Res(QWidget):
         grid_layout.addWidget(self.empty, 1, 0, 1, 2)
         # ================================
 
-        self.myTableWidget = QTableWidget()
+        self.myTableWidget = QTableWidget(self)
         self.myTableWidget.setRowCount(len(self.pat))  ##set number of rows
-        self.myTableWidget.setColumnCount(4)  ##this is fixed for myTableWidget, ensure that both of your tables, sql and qtablewidged have the same number of columns
-
-        #row = 0
+        self.myTableWidget.setColumnCount(4)
+        # row = 0
         header_data = 'Patient ID', 'Patient Details', 'Note Date', 'Note'
         self.myTableWidget.setHorizontalHeaderLabels(header_data)
         self.myTableWidget.setFont(QtGui.QFont("Arial", 12, QFont.Bold))
         for row in range(0, len(self.pat)):
             for col in range(0, 4):
-                self.myTableWidget.setItem(row, col, QTableWidgetItem(self.pat[row][col+1]))
+                if col < 3:
+                    self.items = QTableWidgetItem(self.pat[row][col + 1])
+                    self.items.setTextAlignment(Qt.AlignHCenter)
+                    self.myTableWidget.setItem(row, col, self.items)
+                else:
+                    self.items = QTableWidgetItem(self.pat[row][col + 1])
+                    self.myTableWidget.setItem(row, col, self.items)
+        header = self.myTableWidget.horizontalHeader()
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(3, QtWidgets.QHeaderView.Stretch)
+        self.myTableWidget.setFrameShape(QFrame.Panel)
+        self.myTableWidget.setFrameShadow(QFrame.Sunken)
+        self.myTableWidget.setLineWidth(2)
         self.myTableWidget.setSortingEnabled(True)
-        self.myTableWidget.sortByColumn(3, Qt.AscendingOrder)
+        self.myTableWidget.sortByColumn(2, Qt.AscendingOrder)
+        self.myTableWidget.cellDoubleClicked.connect(self.print_text)
         grid_layout.addWidget(self.myTableWidget, 2, 0, 1, 2)
 
-
+        self.btn_Exit = QPushButton('Back')
+        self.btn_Exit.setToolTip('Close Application')
+        self.btn_Exit.setFont(QFont('Arial', 14, QFont.Bold))
+        self.btn_Exit.setFixedWidth(150)
+        self.btn_Exit.setFixedHeight(40)
+        self.btn_Exit.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.btn_Exit.clicked.connect(self.btn_exit_clicked)
+        grid_layout.addWidget(self.btn_Exit, 3, 0, 1, 2, Qt.AlignCenter)
         # ===============================
         self.empty = QLabel('')
         self.empty.setFixedHeight(70)
@@ -100,10 +116,24 @@ class Show_MedRec_Srch_Res(QWidget):
         self.lbl_ariston.setFixedHeight(20)
         grid_layout.addWidget(self.lbl_ariston, 3 + 1, 0, 1, 2)
 
+    def print_text(self, row, column):
+        item = self.myTableWidget.item(row, column)
+        # dialog_win = QDialog(self)
+        # print(item.text())
+        # dialog_win.show()
+        self.alpha = Print_Selected_MedRec_Result.PrintMedRec(item.text())
+        self.alpha.show()
 
+    def btn_exit_clicked(self):
+        self.close()
 
-if __name__ == '__main__':
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Enter or event.key() == Qt.Key_Return:
+            if self.btn_Exit.hasFocus():
+                self.btn_exit_clicked()
+
+'''if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = Show_MedRec_Srch_Res()
     ex.show()
-    sys.exit(app.exec())
+    sys.exit(app.exec())'''

@@ -116,6 +116,7 @@ class Search_MedRec(QWidget):
         self.btn_Submit.setFont(QFont('Arial', 14, QFont.Bold))
         self.btn_Submit.setFixedWidth(300)
         self.btn_Submit.setFixedHeight(40)
+        self.btn_Submit.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.btn_Submit.clicked.connect(self.btn_submit_clicked)
         grid_layout.addWidget(self.btn_Submit, 4, 0, 1, 2, Qt.AlignCenter)
 
@@ -125,7 +126,8 @@ class Search_MedRec(QWidget):
         self.btn_Exit.setStyleSheet('QPushButton {color: #FF0000;}')
         self.btn_Exit.setFixedWidth(300)
         self.btn_Exit.setFixedHeight(40)
-        self.btn_Exit.clicked.connect(self.close)
+        self.btn_Exit.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.btn_Exit.clicked.connect(self.btn_exit_clicked)
         grid_layout.addWidget(self.btn_Exit, 5, 0, 1, 2, Qt.AlignCenter)
 
         # ===============================
@@ -193,9 +195,19 @@ class Search_MedRec(QWidget):
         conn.commit()
         conn.close()
 
+    def btn_exit_clicked(self):
+        self.close()
 
-if __name__ == '__main__':
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Enter or event.key() == Qt.Key_Return:
+            if self.btn_Submit.hasFocus():
+                self.btn_submit_clicked()
+            if self.btn_Exit.hasFocus():
+                self.btn_exit_clicked()
+
+
+'''if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = Search_MedRec()
     ex.show()
-    sys.exit(app.exec())
+    sys.exit(app.exec())'''

@@ -116,6 +116,7 @@ class Add_Med_Rec(QWidget):
         self.btn_Submit.setFont(QFont('Arial', 14, QFont.Bold))
         self.btn_Submit.setFixedWidth(150)
         self.btn_Submit.setFixedHeight(40)
+        self.btn_Submit.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.btn_Submit.clicked.connect(self.btn_submit_clicked)
         grid_layout.addWidget(self.btn_Submit, 6, 0, 1, 2, Qt.AlignCenter)
 
@@ -162,6 +163,10 @@ class Add_Med_Rec(QWidget):
         except sqlite3.Error as e:
             print(e)
 
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Enter or event.key() == Qt.Key_Return:
+            if self.btn_Submit.hasFocus():
+                self.btn_submit_clicked()
 
 '''if __name__ == '__main__':
     app = QApplication(sys.argv)

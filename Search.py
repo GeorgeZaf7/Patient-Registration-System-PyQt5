@@ -119,9 +119,9 @@ class Search(QWidget):
         self.btn_Search.setToolTip('Login')
         self.btn_Search.setFont(QFont('Arial', 14, QFont.Bold))
         self.btn_Search.setStyleSheet('QPushButton {background-color: #FF0000; color: white;}')
-
         self.btn_Search.setFixedWidth(300)
         self.btn_Search.setFixedHeight(40)
+        self.btn_Search.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.btn_Search.clicked.connect(self.btn_search_clicked)
         grid_layout.addWidget(self.btn_Search, 6, 1, Qt.AlignCenter)
 
@@ -131,6 +131,7 @@ class Search(QWidget):
         self.btn_Reg.setFont(QFont('Arial', 14, QFont.Bold))
         self.btn_Reg.setFixedWidth(300)
         self.btn_Reg.setFixedHeight(40)
+        self.btn_Reg.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.btn_Reg.clicked.connect(self.btn_Reg_clicked)
         grid_layout.addWidget(self.btn_Reg, 7, 1, Qt.AlignCenter)
 
@@ -139,6 +140,7 @@ class Search(QWidget):
         self.btn_Clr.setFont(QFont('Arial', 14, QFont.Bold))
         self.btn_Clr.setFixedWidth(300)
         self.btn_Clr.setFixedHeight(40)
+        self.btn_Clr.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.btn_Clr.clicked.connect(self.btn_clr_clicked)
         grid_layout.addWidget(self.btn_Clr, 8, 1, Qt.AlignCenter)
 
@@ -147,7 +149,8 @@ class Search(QWidget):
         self.btn_Back.setFont(QFont('Arial', 14, QFont.Bold))
         self.btn_Back.setFixedWidth(300)
         self.btn_Back.setFixedHeight(40)
-        self.btn_Back.clicked.connect(self.close)
+        self.btn_Back.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.btn_Back.clicked.connect(self.btn_back_clicked)
         grid_layout.addWidget(self.btn_Back, 9, 1, Qt.AlignCenter)
 
         # ===============================
@@ -200,6 +203,7 @@ class Search(QWidget):
             # Close connection
             conn.close()
 
+
     def btn_Reg_clicked(self):
         self.txt_name.setText("")
         self.txt_sname.setText("")
@@ -215,8 +219,25 @@ class Search(QWidget):
         self.txt_mob.setText("")
         return
 
-if __name__ == '__main__':
+    def btn_back_clicked(self):
+        self.close()
+
+    def keyPressEvent(self, event):
+        #if event.key() == Qt.Key_Return:
+            #self.btn_submit_clicked()
+        if event.key() == Qt.Key_Enter or event.key() == Qt.Key_Return:
+            if self.btn_Search.hasFocus():
+                self.btn_search_clicked()
+            if self.btn_Reg.hasFocus():
+                self.btn_Reg_clicked()
+            if self.btn_Clr.hasFocus():
+                self.btn_clr_clicked()
+            if self.btn_Back.hasFocus():
+                self.btn_back_clicked()
+
+
+'''if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = Search()
     ex.show()
-    sys.exit(app.exec())
+    sys.exit(app.exec())'''

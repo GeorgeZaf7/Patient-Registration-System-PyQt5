@@ -205,6 +205,7 @@ class Reg(QWidget):
         self.btn_Register.setStyleSheet('QPushButton {background-color: #FF0000; color: white;}')
         self.btn_Register.setFixedWidth(300)
         self.btn_Register.setFixedHeight(40)
+        self.btn_Register.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.btn_Register.clicked.connect(self.btn_Reg_clicked)
         grid_layout.addWidget(self.btn_Register, 12, 1, 1, 2, QtCore.Qt.AlignJustify)
 
@@ -213,7 +214,8 @@ class Reg(QWidget):
         self.btn_Exit.setFont(QFont('Arial', 14, QFont.Bold))
         self.btn_Exit.setFixedWidth(300)
         self.btn_Exit.setFixedHeight(40)
-        self.btn_Exit.clicked.connect(self.close)
+        self.btn_Exit.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.btn_Exit.clicked.connect(self.btn_exit_clicked)
         grid_layout.addWidget(self.btn_Exit, 13, 1, 1, 2, QtCore.Qt.AlignJustify)
 
         # ===============================
@@ -280,11 +282,19 @@ class Reg(QWidget):
 
         conn.commit()
         conn.close()
+    def btn_exit_clicked(self):
+        self.close()
 
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Enter or event.key() == Qt.Key_Return:
+            if self.btn_Register.hasFocus():
+                self.btn_Reg_clicked()
+            if self.btn_Exit.hasFocus():
+                self.btn_exit_clicked()
 
-if __name__ == '__main__':
+'''if __name__ == '__main__':
     app = QApplication(sys.argv)
     app.setWindowIcon(QIcon('Resize_Logo.png'))
     ex = Reg()
     ex.show()
-    sys.exit(app.exec())
+    sys.exit(app.exec())'''

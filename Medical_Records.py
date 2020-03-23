@@ -68,6 +68,7 @@ class Med_Rec(QWidget):
         self.btn_Read.setStyleSheet('QPushButton {background-color: #FF0000; color: white;}')
         self.btn_Read.setFixedWidth(200)
         self.btn_Read.setFixedHeight(200)
+        self.btn_Read.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.btn_Read.clicked.connect(self.read_MedRec)
         grid_layout.addWidget(self.btn_Read, 1, 0, Qt.AlignCenter)
 
@@ -77,6 +78,7 @@ class Med_Rec(QWidget):
         self.btn_Add.setStyleSheet('QPushButton {background-color: #FF0000; color: white;}')
         self.btn_Add.setFixedWidth(200)
         self.btn_Add.setFixedHeight(200)
+        self.btn_Add.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.btn_Add.clicked.connect(self.add_MedRec)
         grid_layout.addWidget(self.btn_Add, 1, 1, Qt.AlignCenter)
 
@@ -85,7 +87,8 @@ class Med_Rec(QWidget):
         self.btn_Exit.setFont(QFont('Arial', 14, QFont.Bold))
         self.btn_Exit.setFixedWidth(300)
         self.btn_Exit.setFixedHeight(40)
-        self.btn_Exit.clicked.connect(self.close)
+        self.btn_Exit.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.btn_Exit.clicked.connect(self.btn_exit_clicked)
         grid_layout.addWidget(self.btn_Exit, 2, 0, 1, 2, Qt.AlignCenter)
 
         # ===============================
@@ -120,6 +123,17 @@ class Med_Rec(QWidget):
         self.medrec = Add_Medical_Record.Add_Med_Rec(self.pat)
         self.medrec.show()
 
+    def btn_exit_clicked(self):
+        self.close()
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Enter or event.key() == Qt.Key_Return:
+            if self.btn_Read.hasFocus():
+                self.read_MedRec()
+            if self.btn_Add.hasFocus():
+                self.add_MedRec()
+            if self.btn_Exit.hasFocus():
+                self.btn_exit_clicked()
 
 '''if __name__ == '__main__':
     app = QApplication(sys.argv)
