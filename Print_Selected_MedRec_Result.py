@@ -9,7 +9,7 @@
 # ----------------------------------------------------------------------------
 import sys
 
-from PyQt5 import QtCore
+from PyQt5 import QtCore, Qt
 from PyQt5.QtGui import QFont, QIcon
 from PyQt5.QtWidgets import (QDialog, QPushButton, QVBoxLayout, QTextEdit, QFrame, QDesktopWidget)
 
@@ -51,4 +51,10 @@ class PrintMedRec(QDialog):
         qtRectangle.moveCenter(centerPoint)
         self.move(qtRectangle.topLeft())
 
+    def btn_close_clicked(self):
+        self.close()
 
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Enter or event.key() == Qt.Key_Return:
+            if self.btn_Close.hasFocus():
+                self.btn_close_clicked()

@@ -136,7 +136,7 @@ class Search_MedRec(QWidget):
         grid_layout.addWidget(self.empty, 6, 0, 1, 2)
 
         self.lbl_ariston = QLabel('© AristonAQ Ltd, 2020')
-        self.lbl_ariston.setFont(QtGui.QFont("Times", 8))
+        self.lbl_ariston.setFont(QtGui.QFont("Arial", 9, QFont.Bold))
         self.lbl_ariston.setAlignment(QtCore.Qt.AlignCenter)
         self.lbl_ariston.setFrameShape(QFrame.Panel)
         self.lbl_ariston.setFrameShadow(QFrame.Sunken)

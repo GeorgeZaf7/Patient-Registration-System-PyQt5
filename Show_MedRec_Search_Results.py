@@ -11,12 +11,10 @@
 
 import sys
 from PyQt5 import QtGui, QtCore, QtWidgets
-from PyQt5.QtCore import QDate
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QLinearGradient, QBrush, QColor, QPalette, QFont, QIcon
-from PyQt5.QtWidgets import QWidget, QGridLayout, QDesktopWidget, QLabel, QFrame, QApplication, QCalendarWidget, \
-    QPushButton, QComboBox, QDialog, QTextEdit, QVBoxLayout, QHBoxLayout, QMessageBox, QTableWidget, QTableWidgetItem, \
-    QTableView
+from PyQt5.QtWidgets import QWidget, QGridLayout, QDesktopWidget, QLabel, QFrame, QPushButton, QTableWidget, \
+    QTableWidgetItem
 import Print_Selected_MedRec_Result
 
 
@@ -39,7 +37,6 @@ class Show_MedRec_Srch_Res(QWidget):
         qtRectangle.moveCenter(centerPoint)
         self.move(qtRectangle.topLeft())
         self.setWindowIcon(QIcon('Resized_logo.png'))
-        # QMessageBox.about(self, 'AristonAQ Ltd', "\n   Welcome to AristonREG!\nA Patient Registering System")
 
         p = QPalette()
         gradient = QLinearGradient(0, 50, 0, 300)
@@ -48,7 +45,7 @@ class Show_MedRec_Srch_Res(QWidget):
         p.setBrush(QPalette.Window, QBrush(gradient))
         self.setPalette(p)  #
 
-        self.pat = a
+        self.pat = a  # read data from previous window
 
         grid_layout = QGridLayout()
         self.setLayout(grid_layout)
@@ -66,14 +63,14 @@ class Show_MedRec_Srch_Res(QWidget):
         # ================================
 
         self.myTableWidget = QTableWidget(self)
-        self.myTableWidget.setRowCount(len(self.pat))  ##set number of rows
-        self.myTableWidget.setColumnCount(4)
+        self.myTableWidget.setRowCount(len(self.pat))  # set number of rows
+        self.myTableWidget.setColumnCount(5)
         # row = 0
-        header_data = 'Patient ID', 'Patient Details', 'Note Date', 'Note'
+        header_data = 'Patient ID', 'Patient Details', 'Note Date', 'Note' , 'Added By'
         self.myTableWidget.setHorizontalHeaderLabels(header_data)
         self.myTableWidget.setFont(QtGui.QFont("Arial", 12, QFont.Bold))
         for row in range(0, len(self.pat)):
-            for col in range(0, 4):
+            for col in range(0, 5):
                 if col < 3:
                     self.items = QTableWidgetItem(self.pat[row][col + 1])
                     self.items.setTextAlignment(Qt.AlignHCenter)
@@ -86,6 +83,7 @@ class Show_MedRec_Srch_Res(QWidget):
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(3, QtWidgets.QHeaderView.Stretch)
+        header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
         self.myTableWidget.setFrameShape(QFrame.Panel)
         self.myTableWidget.setFrameShadow(QFrame.Sunken)
         self.myTableWidget.setLineWidth(2)
@@ -97,7 +95,8 @@ class Show_MedRec_Srch_Res(QWidget):
         self.btn_Exit = QPushButton('Back')
         self.btn_Exit.setToolTip('Close Application')
         self.btn_Exit.setFont(QFont('Arial', 14, QFont.Bold))
-        self.btn_Exit.setFixedWidth(150)
+        self.btn_Exit.setStyleSheet('QPushButton {background-color: #FF0000; color: white;}')
+        self.btn_Exit.setFixedWidth(400)
         self.btn_Exit.setFixedHeight(40)
         self.btn_Exit.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.btn_Exit.clicked.connect(self.btn_exit_clicked)
@@ -105,22 +104,20 @@ class Show_MedRec_Srch_Res(QWidget):
         # ===============================
         self.empty = QLabel('')
         self.empty.setFixedHeight(70)
-        grid_layout.addWidget(self.empty, 3, 0, 1, 2)
+        grid_layout.addWidget(self.empty, 4, 0, 1, 2)
 
         self.lbl_ariston = QLabel('© AristonAQ Ltd, 2020')
-        self.lbl_ariston.setFont(QtGui.QFont("Times", 8))
+        self.lbl_ariston.setFont(QtGui.QFont("Arial", 9, QFont.Bold))
         self.lbl_ariston.setAlignment(QtCore.Qt.AlignCenter)
         self.lbl_ariston.setFrameShape(QFrame.Panel)
         self.lbl_ariston.setFrameShadow(QFrame.Sunken)
         self.lbl_ariston.setLineWidth(2)  # lbl_user.setFixedWidth(100)
         self.lbl_ariston.setFixedHeight(20)
-        grid_layout.addWidget(self.lbl_ariston, 3 + 1, 0, 1, 2)
+        grid_layout.addWidget(self.lbl_ariston, 4 + 1, 0, 1, 2)
 
     def print_text(self, row, column):
         item = self.myTableWidget.item(row, column)
-        # dialog_win = QDialog(self)
         # print(item.text())
-        # dialog_win.show()
         self.alpha = Print_Selected_MedRec_Result.PrintMedRec(item.text())
         self.alpha.show()
 
@@ -131,6 +128,7 @@ class Show_MedRec_Srch_Res(QWidget):
         if event.key() == Qt.Key_Enter or event.key() == Qt.Key_Return:
             if self.btn_Exit.hasFocus():
                 self.btn_exit_clicked()
+
 
 '''if __name__ == '__main__':
     app = QApplication(sys.argv)

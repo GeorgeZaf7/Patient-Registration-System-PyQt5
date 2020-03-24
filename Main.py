@@ -131,7 +131,7 @@ class Main(QWidget):
         self.btn_AddUser.setFixedHeight(40)
         self.btn_AddUser.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.btn_AddUser.clicked.connect(self.btn_addusr_clicked)
-        self.dialogs = list()
+        #self.dialogs = list()
         grid_layout.addWidget(self.btn_AddUser, 6, 1)
 
         self.empty = QLabel('')
@@ -139,7 +139,7 @@ class Main(QWidget):
         grid_layout.addWidget(self.empty, 7, 0, 1, 3)
 
         self.lbl_ariston = QLabel('© AristonAQ Ltd, 2020')
-        self.lbl_ariston.setFont(QtGui.QFont("Times", 8))
+        self.lbl_ariston.setFont(QtGui.QFont("Arial", 9, QFont.Bold))
         self. lbl_ariston.setAlignment(QtCore.Qt.AlignCenter)
         self.lbl_ariston.setFrameShape(QFrame.Panel)
         self.lbl_ariston.setFrameShadow(QFrame.Sunken)
@@ -164,18 +164,20 @@ class Main(QWidget):
         pas = self.txt_Pass.text()
         c.execute('''SELECT username, password FROM users WHERE username=? AND password=?''', (user, pas,))
         exists = c.fetchall()
-        print(exists)
         if not exists:
             QMessageBox.warning(self, "Error", "Invalid Login Details.\n\n   Please try again.")
             self.txt_User.clear()#setText("")
             self.txt_Pass.clear()#setText("")
             return
         else:
-            self.txt_User.setText("")
-            self.txt_Pass.setText("")
-            self.dialogs = Search.Search()
+            c.execute('''SELECT * FROM users WHERE username=? AND password=?''', (user, pas,))
+            srname = c.fetchone()
+            print(srname[1])
+            self.dialogs = Search.Search(srname[1])
             #self.dialogs.append(self.dialogs)
             self.dialogs.show()
+            self.txt_User.setText("")
+            self.txt_Pass.setText("")
         conn.commit()
         conn.close()
         self.showMinimized()

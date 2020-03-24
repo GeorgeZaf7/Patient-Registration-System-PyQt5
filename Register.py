@@ -10,18 +10,16 @@
 # ----------------------------------------------------------------------------
 import sys
 import sqlite3
-import os
 from datetime import datetime
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QAction, qApp, QTextEdit, QMessageBox, \
-    QFontDialog, QStatusBar, QFileDialog, QLabel, QVBoxLayout, QFrame, QSizePolicy, QDesktopWidget, QHBoxLayout, \
-    QGridLayout, QLineEdit, QComboBox, QSpinBox, QDateEdit, QRadioButton, QCalendarWidget
+from PyQt5.QtWidgets import QWidget, QPushButton, QMessageBox, QLabel, QFrame, QDesktopWidget, \
+    QGridLayout, QLineEdit, QRadioButton, QCalendarWidget
 from PyQt5.QtGui import QIcon, QFont, QPalette, QLinearGradient, QColor, QBrush
-from PyQt5 import QtCore, QtWidgets, QtGui
+from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import Qt, QDate
 
 
 class Reg(QWidget):
-    def __init__(self):
+    def __init__(self, usr):
         super().__init__()
         self.title = "Patient Registration System"
         self.left = 0
@@ -34,9 +32,10 @@ class Reg(QWidget):
         currentMonth = datetime.now().month
         currentYear = datetime.now().year
 
-        self.initUI()
+        self.user = usr
+        self.initUI(self.user)
 
-    def initUI(self):
+    def initUI(self, a):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         qtRectangle = self.frameGeometry()
@@ -44,7 +43,6 @@ class Reg(QWidget):
         qtRectangle.moveCenter(centerPoint)
         self.move(qtRectangle.topLeft())
         self.setWindowIcon(QIcon('Resized_logo.png'))
-        # QMessageBox.about(self, 'AristonAQ Ltd', "\n   Welcome to AristonREG!\nA Patient Registering System")
 
         p = QPalette()
         gradient = QLinearGradient(0, 200, 0, 400)
@@ -55,6 +53,8 @@ class Reg(QWidget):
 
         grid_layout = QGridLayout()
         self.setLayout(grid_layout)
+
+        self.usr = a
 
         self.lbl_pag_title = QLabel('Register A Patient')
         self.lbl_pag_title.setFont(QtGui.QFont("Arial", 25, QFont.Bold))
@@ -224,7 +224,7 @@ class Reg(QWidget):
         grid_layout.addWidget(self.empty, 14, 0)
 
         self.lbl_ariston = QLabel('© AristonAQ Ltd, 2020')
-        self.lbl_ariston.setFont(QtGui.QFont("Times", 8))
+        self.lbl_ariston.setFont(QtGui.QFont("Arial", 9, QFont.Bold))
         self.lbl_ariston.setAlignment(QtCore.Qt.AlignCenter)
         self.lbl_ariston.setFrameShape(QFrame.Panel)
         self.lbl_ariston.setFrameShadow(QFrame.Sunken)
@@ -247,6 +247,8 @@ class Reg(QWidget):
             gen = self.rd_btn_female.text()
         '''b = self.dateedit.date()
         var = b.toPyDate()'''
+        user_name = str(self.usr)
+        print(user_name)
 
         conn = sqlite3.connect('Patient_DB.db')
         cur = conn.cursor()
@@ -260,15 +262,16 @@ class Reg(QWidget):
                                     mobile text NOT NULL,
                                     email txt NOT NULL,
                                     DoB text NOT NULL,
-                                    gender text NOT NULL
+                                    gender text NOT NULL,
+                                    user text NOT NULL
                             )""")
 
         patient_id = """INSERT INTO patients (first_name, last_name, address, postcode, city, mobile, email, DoB, 
-                gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) """
+                gender, user) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """
 
         cur.execute(patient_id,
                     (self.txt_name.text(), self.txt_sname.text(), self.txt_addr.text(), self.txt_post.text(),
-                     self.txt_city.text(), self.txt_mob.text(), self.txt_email.text(), new, gen))
+                     self.txt_city.text(), self.txt_mob.text(), self.txt_email.text(), new, gen, user_name))
         self.txt_name.clear()
         self.txt_sname.clear()
         self.txt_addr.clear()
@@ -279,9 +282,9 @@ class Reg(QWidget):
         QMessageBox.information(self, 'Successful', 'All Done!')
         for row in cur.execute('SELECT * FROM patients'):
             print(row)
-
         conn.commit()
         conn.close()
+
     def btn_exit_clicked(self):
         self.close()
 

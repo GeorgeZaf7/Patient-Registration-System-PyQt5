@@ -47,13 +47,14 @@ class AddUsr(QWidget):
         self.lbl_pag_title = QLabel('Employee Registration')
         self.lbl_pag_title.setFont(QtGui.QFont("Arial", 25, QFont.Bold))
         self.lbl_pag_title.setAlignment(QtCore.Qt.AlignCenter)
-        #self.lbl_pag_title.setFixedWidth(300)
+        # self.lbl_pag_title.setFixedWidth(300)
         self.lbl_pag_title.setFixedHeight(50)
         grid_layout.addWidget(self.lbl_pag_title, 0, 0, 1, 3)
 
         self.empty = QLabel('')
         self.empty.setFixedHeight(30)
         grid_layout.addWidget(self.empty, 1, 0, 1, 3)
+        # =================================================================
 
         self.lbl_name = QLabel('Name:')
         self.lbl_name.setFont(QtGui.QFont("Arial", 14, QtGui.QFont.DemiBold))
@@ -81,7 +82,6 @@ class AddUsr(QWidget):
         self.txt_Sname.setFixedHeight(30)
         grid_layout.addWidget(self.txt_Sname, 3, 1, 1, 2)
 
-
         self.lbl_user = QLabel('Username:')
         self.lbl_user.setFont(QtGui.QFont("Arial", 14, QtGui.QFont.DemiBold))
         # lbl_user.setFixedWidth(100)
@@ -106,10 +106,9 @@ class AddUsr(QWidget):
         # txt_Pass.setFixedWidth(250)
         self.txt_Pass.setFixedHeight(30)
         self.txt_Pass.setPlaceholderText("Enter your password...")
-        #self.txt_Pass.setEchoMode(QLineEdit.Password)
-        #self.txt_Pass.setStyleSheet('lineedit-password-character: 9679')
+        # self.txt_Pass.setEchoMode(QLineEdit.Password)
+        # self.txt_Pass.setStyleSheet('lineedit-password-character: 9679')
         grid_layout.addWidget(self.txt_Pass, 5, 1, 1, 2)
-
 
         self.empty = QLabel('')
         self.empty.setFixedHeight(20)
@@ -131,7 +130,7 @@ class AddUsr(QWidget):
         self.btn_Submit.setFixedWidth(150)
         self.btn_Submit.setFixedHeight(40)
         self.btn_Submit.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self. btn_Submit.clicked.connect(self.btn_submit_clicked)
+        self.btn_Submit.clicked.connect(self.btn_submit_clicked)
         grid_layout.addWidget(self.btn_Submit, 8, 1)
 
         self.btn_Back = QPushButton('Back')
@@ -143,25 +142,50 @@ class AddUsr(QWidget):
         self.btn_Back.clicked.connect(self.btn_back_clicked)
         grid_layout.addWidget(self.btn_Back, 8, 2)
 
+        self.btn_Del = QPushButton('Delete')
+        self.btn_Del.setToolTip('Delete User')
+        self.btn_Del.setFont(QFont('Arial', 14, QFont.Bold))
+        self.btn_Del.setFixedWidth(150)
+        self.btn_Del.setFixedHeight(40)
+        self.btn_Del.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.btn_Del.clicked.connect(self.btn_del_clicked)
+        grid_layout.addWidget(self.btn_Del, 9, 1)
+
+        # ========================================================
         self.empty = QLabel('')
         self.empty.setFixedHeight(70)
-        grid_layout.addWidget(self.empty, 9, 0, 1, 3)
+        grid_layout.addWidget(self.empty, 10, 0, 1, 3)
 
         self.lbl_ariston = QLabel('© AristonAQ Ltd, 2020')
-        self.lbl_ariston.setFont(QtGui.QFont("Times", 8))
-        self. lbl_ariston.setAlignment(QtCore.Qt.AlignCenter)
+        self.lbl_ariston.setFont(QtGui.QFont("Arial", 9, QFont.Bold))
+        self.lbl_ariston.setAlignment(QtCore.Qt.AlignCenter)
         self.lbl_ariston.setFrameShape(QFrame.Panel)
         self.lbl_ariston.setFrameShadow(QFrame.Sunken)
         self.lbl_ariston.setLineWidth(2)  # lbl_user.setFixedWidth(100)
         self.lbl_ariston.setFixedHeight(20)
-        grid_layout.addWidget(self.lbl_ariston, 10, 0, 1, 3)
-
+        grid_layout.addWidget(self.lbl_ariston, 10 + 1, 0, 1, 3)
 
     def btn_clr_clicked(self):
         self.txt_User.setText("")
         self.txt_Pass.setText("")
         self.txt_Name.setText("")
         self.txt_Sname.setText("")
+
+    def btn_del_clicked(self):
+        conn = sqlite3.connect('Login_Details_Database.db')
+        c = conn.cursor()
+        ans = QMessageBox.question(self, 'Warning!', 'Do you really want to delete the user?',
+                                   QMessageBox.StandardButtons(QMessageBox.Yes | QMessageBox.No),
+                                   QMessageBox.No)
+        if ans == QMessageBox.Yes:
+            c.execute('''DELETE FROM users WHERE username=?''', (self.txt_User.text(),))
+            QMessageBox.information(self, 'DONE!', 'User Successfully Deleted')
+            conn.commit()
+            conn.close()
+        else:
+            conn.commit()
+            conn.close()
+            return
 
     def btn_submit_clicked(self):
         conn = sqlite3.connect('Login_Details_Database.db')
@@ -176,7 +200,7 @@ class AddUsr(QWidget):
         exists = c.fetchall()
         if not exists:
             c.execute('INSERT INTO users VALUES(?,?,?,?)', self.add)
-            QMessageBox.information(self,'Successful', 'All Done!')
+            QMessageBox.information(self, 'Successful', 'All Done!')
             self.txt_User.setText("")
             self.txt_Pass.setText("")
             self.txt_Name.setText("")
@@ -189,13 +213,14 @@ class AddUsr(QWidget):
             self.txt_Name.setText("")
             self.txt_Sname.setText("")
         conn.commit()
+        conn.close()
 
     def btn_back_clicked(self):
         self.close()
 
     def keyPressEvent(self, event):
-        #if event.key() == Qt.Key_Return:
-            #self.btn_submit_clicked()
+        # if event.key() == Qt.Key_Return:
+        # self.btn_submit_clicked()
         if event.key() == Qt.Key_Enter or event.key() == Qt.Key_Return:
             if self.btn_Submit.hasFocus():
                 self.btn_submit_clicked()
@@ -203,6 +228,9 @@ class AddUsr(QWidget):
                 self.btn_clr_clicked()
             if self.btn_Back.hasFocus():
                 self.btn_back_clicked()
+            if self.btn_Del.hasFocus():
+                self.btn_del_clicked()
+
 
 '''if __name__ == '__main__':
     app = QApplication(sys.argv)

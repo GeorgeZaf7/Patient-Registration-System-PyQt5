@@ -10,19 +10,16 @@
 # ----------------------------------------------------------------------------
 
 import sys
-import sqlite3
-import os
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QAction, qApp, QTextEdit, QMessageBox, \
-    QFontDialog, QStatusBar, QFileDialog, QLabel, QVBoxLayout, QFrame, QSizePolicy, QDesktopWidget, QHBoxLayout, \
-    QGridLayout, QLineEdit
+import csv
+from PyQt5.QtWidgets import QWidget, QPushButton, QTextEdit, QLabel, QFrame, QDesktopWidget, QGridLayout
 from PyQt5.QtGui import QIcon, QFont, QPalette, QLinearGradient, QColor, QBrush
-from PyQt5 import QtCore, QtWidgets, QtGui
+from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import Qt
 import Medical_Records
 
 
 class Search_Res(QWidget):
-    def __init__(self, pat):
+    def __init__(self, pat, desc, usr):
         super().__init__()
         self.title = "Patient Registration System"
         self.left = 0
@@ -30,9 +27,11 @@ class Search_Res(QWidget):
         self.width = 640
         self.height = 480
         self.patient = pat
-        self.initUI(self.patient)
+        self.description = desc
+        self.user = usr
+        self.initUI(self.patient, self.description, self.user)
 
-    def initUI(self, a):
+    def initUI(self, a, b, c):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         qtRectangle = self.frameGeometry()
@@ -51,7 +50,7 @@ class Search_Res(QWidget):
 
         grid_layout = QGridLayout()
         self.setLayout(grid_layout)
-        pat = a
+
         self.lbl_pag_title = QLabel('Search Results')
         self.lbl_pag_title.setFont(QtGui.QFont("Arial", 25, QFont.Bold))
         self.lbl_pag_title.setAlignment(QtCore.Qt.AlignCenter)
@@ -60,14 +59,18 @@ class Search_Res(QWidget):
         grid_layout.addWidget(self.lbl_pag_title, 0, 0, 1, 2)
 
         self.patient = a
+        self.descript = b
+        self.usr = c
+
         print_Data = 'Patient ID: ' + str(self.patient[0]) + '\nName: ' + str(self.patient[1]) + "\nSurname: " + str(self.patient[2]) + "\nAddress: " + str(
             self.patient[3]) + "\nPostcode: " + str(self.patient[4]) + "\nCity: " + str(self.patient[5]) + \
                      "\nMobile: " + str(self.patient[6]) + "\nEmail: " + str(self.patient[7]) + "\nDate of Birth: " + str(
-            self.patient[8]) + "\nGender: " + str(self.patient[9] + '\n')
+            self.patient[8]) + "\nGender: " + str(self.patient[9]) + "\nAdded By: " + str(self.patient[10]) + '\n'
         self.txt_pat_info = QTextEdit(self)
         self.txt_pat_info.setReadOnly(True)
         self.txt_pat_info.setFont(QFont('Arial', 12, QFont.Bold))
         self.txt_pat_info.setText(str(print_Data))
+        self.txt_pat_info.setFixedWidth(400)
         grid_layout.addWidget(self.txt_pat_info, 1, 0, 1, 2, Qt.AlignJustify)
         #self.txt_pat_info.resize(100, 100)
 
@@ -106,7 +109,7 @@ class Search_Res(QWidget):
         grid_layout.addWidget(self.empty, 6, 0)
 
         self.lbl_ariston = QLabel('© AristonAQ Ltd, 2020')
-        self.lbl_ariston.setFont(QtGui.QFont("Times", 8))
+        self.lbl_ariston.setFont(QtGui.QFont("Arial", 9, QFont.Bold))
         self.lbl_ariston.setAlignment(QtCore.Qt.AlignCenter)
         self.lbl_ariston.setFrameShape(QFrame.Panel)
         self.lbl_ariston.setFrameShadow(QFrame.Sunken)
@@ -117,10 +120,15 @@ class Search_Res(QWidget):
         # Functions for buttons
 
     def open_MedRec(self):
-        self.new = Medical_Records.Med_Rec(self.patient)
+        self.new = Medical_Records.Med_Rec(self.patient, self.usr) # na valw edw to user gia to epomeno
         self.new.show()
+        #print(self.patient)
+
     def btn_print_clicked(self):
-        return
+        with open('Patient_Test.csv', 'w', newline='') as csv_file:
+            csv_writer = csv.writer(csv_file)
+            csv_writer.writerow([i[0] for i in self.descript])  # write headers
+            csv_writer.writerow(self.patient)
 
     def btn_back_clicked(self):
         self.close()

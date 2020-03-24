@@ -22,16 +22,17 @@ import Register, Search_Reults
 
 
 class Search(QWidget):
-    def __init__(self):
+    def __init__(self, usr):
         super().__init__()
         self.title = "Patient Registration System"
         self.left = 0
         self.top = 0
         self.width = 640
         self.height = 480
-        self.initUI()
+        self.user = usr
+        self.initUI(self.user)
 
-    def initUI(self):
+    def initUI(self, a):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         qtRectangle = self.frameGeometry()
@@ -50,6 +51,8 @@ class Search(QWidget):
 
         grid_layout = QGridLayout()
         self.setLayout(grid_layout)
+
+        self.user_nam = a
 
         self.lbl_pag_title = QLabel('Search Patient Database')
         self.lbl_pag_title.setFont(QtGui.QFont("Arial", 25, QFont.Bold))
@@ -159,7 +162,7 @@ class Search(QWidget):
         grid_layout.addWidget(self.empty, 10, 0)
 
         self.lbl_ariston = QLabel('© AristonAQ Ltd, 2020')
-        self.lbl_ariston.setFont(QtGui.QFont("Times", 8))
+        self.lbl_ariston.setFont(QtGui.QFont("Arial", 9, QFont.Bold))
         self.lbl_ariston.setAlignment(QtCore.Qt.AlignCenter)
         self.lbl_ariston.setFrameShape(QFrame.Panel)
         self.lbl_ariston.setFrameShadow(QFrame.Sunken)
@@ -193,7 +196,8 @@ class Search(QWidget):
                 #QMessageBox.information(self, "Successful", 'Patient Exists')
                 cur.execute('SELECT * FROM patients WHERE postcode=? AND mobile=?', (c, d,))
                 pat = cur.fetchone()
-                self.new = Search_Reults.Search_Res(pat)
+                descr = cur.description
+                self.new = Search_Reults.Search_Res(pat, descr, self.user_nam)
                 self.new.show()
                 self.txt_name.clear()
                 self.txt_sname.clear()
@@ -209,7 +213,7 @@ class Search(QWidget):
         self.txt_sname.setText("")
         self.txt_post.setText("")
         self.txt_mob.setText("")
-        self.dialogs = Register.Reg()
+        self.dialogs = Register.Reg(self.user_nam)
         self.dialogs.show()
 
     def btn_clr_clicked(self):

@@ -19,7 +19,7 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 
 
 class Add_Med_Rec(QWidget):
-    def __init__(self,pat): #pat
+    def __init__(self,pat, usr): #pat
         super().__init__()
         self.title = "Patient Registration System"
         self.left = 0
@@ -27,9 +27,10 @@ class Add_Med_Rec(QWidget):
         self.width = 640
         self.height = 480
         self.patient = pat
-        self.initUI(self.patient) #self.patient
+        self.user = usr
+        self.initUI(self.patient, self.user) #self.patient
 
-    def initUI(self,a): #a
+    def initUI(self, a ,b): #a
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         qtRectangle = self.frameGeometry()
@@ -47,6 +48,7 @@ class Add_Med_Rec(QWidget):
         self.setPalette(p)  #
 
         self.pat = a
+        self.user_nam = b
 
         grid_layout = QGridLayout()
         self.setLayout(grid_layout)
@@ -127,7 +129,7 @@ class Add_Med_Rec(QWidget):
         grid_layout.addWidget(self.empty, 7, 0, 1, 2)
 
         self.lbl_ariston = QLabel('© AristonAQ Ltd, 2020')
-        self.lbl_ariston.setFont(QtGui.QFont("Times", 8))
+        self.lbl_ariston.setFont(QtGui.QFont("Arial", 9, QFont.Bold))
         self.lbl_ariston.setAlignment(QtCore.Qt.AlignCenter)
         self.lbl_ariston.setFrameShape(QFrame.Panel)
         self.lbl_ariston.setFrameShadow(QFrame.Sunken)
@@ -150,13 +152,14 @@ class Add_Med_Rec(QWidget):
                                                 pat_id text NOT NULL,
                                                 pat_name text NOT NULL,
                                                 date text NOT NULL,
-                                                notes text NOT NULL
+                                                notes text NOT NULL,
+                                                added text NOT NULL
                                         )""")
 
-            patient_id = """INSERT INTO pat_med_rec (pat_id, pat_name, date, notes) VALUES (?, ?, ?, ?) """
+            patient_id = """INSERT INTO pat_med_rec (pat_id, pat_name, date, notes,added) VALUES (?, ?, ?, ?, ?) """
 
             cur.execute(patient_id,
-                        (self.patient[0], self.patient[1] + ' ' +self.patient[2], self.date_now, self.txt_pat_info.toPlainText()))
+                        (self.patient[0], self.patient[1] + ' ' +self.patient[2], self.date_now, self.txt_pat_info.toPlainText(), self.user_nam))
             conn.commit()
             conn.close()
             QMessageBox.information(self, 'Success!', 'Notes have been added.')

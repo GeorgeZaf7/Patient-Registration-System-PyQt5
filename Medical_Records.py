@@ -22,7 +22,7 @@ import Search_Medical_Records
 
 
 class Med_Rec(QWidget):
-    def __init__(self, pat):
+    def __init__(self, pat, usr):
         super().__init__()
         self.title = "Patient Registration System"
         self.left = 0
@@ -30,9 +30,10 @@ class Med_Rec(QWidget):
         self.width = 640
         self.height = 480
         self.patient = pat
-        self.initUI(self.patient)  # self.patient
+        self.user = usr
+        self.initUI(self.patient, self.user)  # self.patient
 
-    def initUI(self, a):
+    def initUI(self, a, b):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         qtRectangle = self.frameGeometry()
@@ -50,6 +51,7 @@ class Med_Rec(QWidget):
         self.setPalette(p)  #
 
         self.pat = a
+        self.user_nam = b
 
         grid_layout = QGridLayout()
         self.setLayout(grid_layout)
@@ -97,7 +99,7 @@ class Med_Rec(QWidget):
         grid_layout.addWidget(self.empty, 3, 0, 1, 2)
 
         self.lbl_ariston = QLabel('© AristonAQ Ltd, 2020')
-        self.lbl_ariston.setFont(QtGui.QFont("Times", 8))
+        self.lbl_ariston.setFont(QtGui.QFont("Arial", 9, QFont.Bold))
         self.lbl_ariston.setAlignment(QtCore.Qt.AlignCenter)
         self.lbl_ariston.setFrameShape(QFrame.Panel)
         self.lbl_ariston.setFrameShadow(QFrame.Sunken)
@@ -120,7 +122,7 @@ class Med_Rec(QWidget):
         return
 
     def add_MedRec(self):
-        self.medrec = Add_Medical_Record.Add_Med_Rec(self.pat)
+        self.medrec = Add_Medical_Record.Add_Med_Rec(self.pat, self.user_nam)
         self.medrec.show()
 
     def btn_exit_clicked(self):
