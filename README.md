@@ -9,3 +9,5 @@ In the case where the clinicians would want to add new medical notes (medical re
 
 When the clinical personnel  will finish its report, the data will be saved in the prviously mentioned database (one for each patient).
 
+Note: The structure of the scripts can be seen in the Code_Structure file.
+
