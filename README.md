@@ -8,5 +8,5 @@ Following successful login, the next window allows the user to search/register a
 After the search, a new window opens (contains two major buttons), where the user can either retrieve the existing records (Button no.1) or add new notes (Button no.2). If the Button 1 is pressed, a new window opens, which asks the user to define the starting date from which onwards the records wishes to see. The date submission returns a new window where all the notes from the defined date onwards are displayed (in a table format - the notes can be double-clicked ans are printed in a text editor without edit permission). If Button 2 is pressed, a new window opens with a text editor where the user can add a new medical note. The Medical Records/Notes are stored individually for each patient in an database with the patient's Registration ID.   
 
 
-Note: The structure of the scripts can be seen in the Code_Structure.pdf file.
+Note: The structure of the code scripts can be seen in the Code_Structure.pdf file.
 
